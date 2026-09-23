@@ -123,6 +123,17 @@ La procédure détaillée (URLs sources, normalisation du viewBox `0 -960 960 96
 
 **Aucune couleur en dur** (hex, rgb) dans les SVGs ou les composants générés — tout passe par `currentColor` ou une CSS custom property. Les tracés duotone secondaires sont mappés vers un token via `DUOTONE_COLOR_TO_TOKEN` dans `scripts/optimize-svg.ts`.
 
+## Publication
+
+Publication manuelle sur GitHub Packages (ce dépôt n'a pas de workflow CI de publication) :
+
+```bash
+# bump la version dans package.json, committer, puis :
+NPM_AUTH_TOKEN=$(gh auth token) pnpm publish --no-git-checks
+```
+
+`gh auth token` doit porter le scope `write:packages` (sinon `gh auth refresh -h github.com -s write:packages`). `prepublishOnly` enchaîne typecheck, lint, test et build avant la publication. Aucun PAT stocké.
+
 ## Stack
 
 React 18/19 · TypeScript strict · ESM uniquement · SVGO 3 · tsup · Biome · Vitest · Node ≥ 22
