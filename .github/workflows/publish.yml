@@ -1,0 +1,48 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    name: Build & Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          cache: pnpm
+
+      # @aexae/comete-design-tokens est un package privé : l'install lit via
+      # GITHUB_TOKEN (permissions packages: read couvertes par packages: write).
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # prepublishOnly enchaîne typecheck, lint, test et build avant publication.
+      - name: Publish (pre-release)
+        if: contains(github.ref_name, '-')
+        run: pnpm publish --tag alpha --no-git-checks
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish (stable)
+        if: "!contains(github.ref_name, '-')"
+        run: pnpm publish --no-git-checks
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

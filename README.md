@@ -125,14 +125,13 @@ La procédure détaillée (URLs sources, normalisation du viewBox `0 -960 960 96
 
 ## Publication
 
-Publication manuelle sur GitHub Packages (ce dépôt n'a pas de workflow CI de publication) :
+Automatisée par la CI (`.github/workflows/publish.yml`) au push d'un tag `v*`, via le `GITHUB_TOKEN` d'Actions (`packages: write`), aucun PAT requis. `prepublishOnly` enchaîne typecheck, lint, test et build avant la publication. Les pré-releases (tag contenant `-`) sont publiées sous le dist-tag `alpha`.
 
 ```bash
 # bump la version dans package.json, committer, puis :
-NPM_AUTH_TOKEN=$(gh auth token) pnpm publish --no-git-checks
+git tag v0.7.3
+git push origin main v0.7.3   # le tag déclenche le workflow Publish
 ```
-
-`gh auth token` doit porter le scope `write:packages` (sinon `gh auth refresh -h github.com -s write:packages`). `prepublishOnly` enchaîne typecheck, lint, test et build avant la publication. Aucun PAT stocké.
 
 ## Stack
 
