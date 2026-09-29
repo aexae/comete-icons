@@ -4,15 +4,15 @@ import { getIconClass } from "../utils";
 const svgData: Record<string, Record<string, { viewBox: string; paths: React.JSX.Element }>> = {
     outlined: {
       "default": { viewBox: "0 0 24 24", paths: <><path fill="currentColor" d="M13 4v12.175l5.6-5.6L20 12l-8 8-8-8 1.4-1.425 5.6 5.6V4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3410)"><path fill="currentColor" d="M9 0v12.175l5.6-5.6L16 8l-8 8-8-8 1.4-1.425 5.6 5.6V0z"/></g><defs><clipPath id="clip0_620_3410"><path fill="currentColor" d="M16 16H0V0h16z"/></clipPath></defs></> }
+      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3410)"><path fill="currentColor" d="M9 0v12.175l5.6-5.6L16 8l-8 8-8-8 1.4-1.425 5.6 5.6V0z"/></g></> }
     },
     filled: {
       "default": { viewBox: "0 0 24 24", paths: <><path fill="currentColor" d="M13 4v12.175l5.6-5.6L20 12l-8 8-8-8 1.4-1.425 5.6 5.6V4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3412)"><path fill="currentColor" d="M9 0v12.175l5.6-5.6L16 8l-8 8-8-8 1.4-1.425 5.6 5.6V0z"/></g><defs><clipPath id="clip0_620_3412"><path fill="currentColor" d="M16 16H0V0h16z"/></clipPath></defs></> }
+      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3412)"><path fill="currentColor" d="M9 0v12.175l5.6-5.6L16 8l-8 8-8-8 1.4-1.425 5.6 5.6V0z"/></g></> }
     },
     duotone: {
-      "default": { viewBox: "0 0 24 24", paths: <><path fill="#E12121" d="M13 4v12.175l5.6-5.6L20 12l-8 8-8-8 1.4-1.425 5.6 5.6V4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3414)"><path fill="#E12121" d="M9 0v12.175l5.6-5.6L16 8l-8 8-8-8 1.4-1.425 5.6 5.6V0z"/></g><defs><clipPath id="clip0_620_3414"><path fill="#fff" d="M16 16H0V0h16z"/></clipPath></defs></> }
+      "default": { viewBox: "0 0 24 24", paths: <><path fill="var(--icon-critical)" d="M13 4v12.175l5.6-5.6L20 12l-8 8-8-8 1.4-1.425 5.6 5.6V4z"/></> },
+      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3414)"><path fill="var(--icon-critical)" d="M9 0v12.175l5.6-5.6L16 8l-8 8-8-8 1.4-1.425 5.6 5.6V0z"/></g></> }
     }
 };
 

@@ -4,15 +4,15 @@ import { getIconClass } from "../utils";
 const svgData: Record<string, Record<string, { viewBox: string; paths: React.JSX.Element }>> = {
     outlined: {
       "default": { viewBox: "0 0 24 24", paths: <><path fill="currentColor" d="M16.175 13H4v-2h12.175l-5.6-5.6L12 4l8 8-8 8-1.425-1.4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3376)"><path fill="currentColor" d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4z"/></g><defs><clipPath id="clip0_620_3376"><path fill="currentColor" d="M0 0h16v16H0z"/></clipPath></defs></> }
+      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3376)"><path fill="currentColor" d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4z"/></g></> }
     },
     filled: {
       "default": { viewBox: "0 0 24 24", paths: <><path fill="currentColor" d="M16.175 13H4v-2h12.175l-5.6-5.6L12 4l8 8-8 8-1.425-1.4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3378)"><path fill="currentColor" d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4z"/></g><defs><clipPath id="clip0_620_3378"><path fill="currentColor" d="M0 0h16v16H0z"/></clipPath></defs></> }
+      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3378)"><path fill="currentColor" d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4z"/></g></> }
     },
     duotone: {
       "default": { viewBox: "0 0 24 24", paths: <><path fill="var(--icon-information)" d="M16.175 13H4v-2h12.175l-5.6-5.6L12 4l8 8-8 8-1.425-1.4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3380)"><path fill="var(--icon-information)" d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4z"/></g><defs><clipPath id="clip0_620_3380"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></> }
+      "none": { viewBox: "0 0 16 16", paths: <><g clip-path="url(#clip0_620_3380)"><path fill="var(--icon-information)" d="M12.175 9H0V7h12.175l-5.6-5.6L8 0l8 8-8 8-1.425-1.4z"/></g></> }
     }
 };
 

@@ -11,8 +11,8 @@ const svgData: Record<string, Record<string, { viewBox: string; paths: React.JSX
       "none": { viewBox: "0 0 16 16", paths: <><path fill="currentColor" fillRule="evenodd" d="M8 16a7.8 7.8 0 0 1-3.104-.625 8.1 8.1 0 0 1-2.552-1.719 8.1 8.1 0 0 1-1.719-2.552A7.8 7.8 0 0 1 0 8q0-1.667.625-3.115a8.06 8.06 0 0 1 4.27-4.26A7.8 7.8 0 0 1 8 0q1.667 0 3.115.625a8.1 8.1 0 0 1 4.26 4.26Q16 6.334 16 8a7.8 7.8 0 0 1-.625 3.104 8.06 8.06 0 0 1-4.26 4.271A7.8 7.8 0 0 1 8 16m3.896-9.937L6.937 11 4.105 8.188l1.063-1.063 1.77 1.75L10.834 5z" clipRule="evenodd"/></> }
     },
     duotone: {
-      "default": { viewBox: "0 0 24 24", paths: <><path fill="#009B60" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"/></> },
-      "none": { viewBox: "0 0 16 16", paths: <><path fill="#009B60" d="M5.896 13.164 1 8.268l1.224-1.223 3.672 3.671 7.88-7.88L15 4.06z"/></> }
+      "default": { viewBox: "0 0 24 24", paths: <><path fill="var(--icon-success)" d="m9.55 18-5.7-5.7 1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4z"/></> },
+      "none": { viewBox: "0 0 16 16", paths: <><path fill="var(--icon-success)" d="M5.896 13.164 1 8.268l1.224-1.223 3.672 3.671 7.88-7.88L15 4.06z"/></> }
     }
 };
 

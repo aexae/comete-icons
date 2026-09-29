@@ -47,6 +47,7 @@ import { BusinessCenter } from "./icons/BusinessCenter";
 import { BusinessManagementTables } from "./icons/BusinessManagementTables";
 import { Calculate } from "./icons/Calculate";
 import { CalendarActivity } from "./icons/CalendarActivity";
+import { CalendarAi } from "./icons/CalendarAi";
 import { CalendarClock } from "./icons/CalendarClock";
 import { CalendarMonth } from "./icons/CalendarMonth";
 import { CalendarProfile } from "./icons/CalendarProfile";
@@ -154,6 +155,7 @@ import { ExpandMore } from "./icons/ExpandMore";
 import { Extension } from "./icons/Extension";
 import { FaceId } from "./icons/FaceId";
 import { Fax } from "./icons/Fax";
+import { Female } from "./icons/Female";
 import { Figma } from "./icons/Figma";
 import { FileExport } from "./icons/FileExport";
 import { FileImport } from "./icons/FileImport";
@@ -197,6 +199,7 @@ import { Inbox } from "./icons/Inbox";
 import { IndeterminateQuestionBox } from "./icons/IndeterminateQuestionBox";
 import { Info } from "./icons/Info";
 import { InsertPageBreak } from "./icons/InsertPageBreak";
+import { Instruction } from "./icons/Instruction";
 import { InvoiceBillableClients } from "./icons/InvoiceBillableClients";
 import { InvoiceCancellation } from "./icons/InvoiceCancellation";
 import { InvoiceCredit } from "./icons/InvoiceCredit";
@@ -223,6 +226,7 @@ import { LastInvoice } from "./icons/LastInvoice";
 import { LastPage } from "./icons/LastPage";
 import { LeftPanelClose } from "./icons/LeftPanelClose";
 import { LeftPanelOpen } from "./icons/LeftPanelOpen";
+import { License } from "./icons/License";
 import { Lightbulb } from "./icons/Lightbulb";
 import { LightMode } from "./icons/LightMode";
 import { Link } from "./icons/Link";
@@ -237,6 +241,7 @@ import { LockCritical } from "./icons/LockCritical";
 import { LockOpenRight } from "./icons/LockOpenRight";
 import { Logout } from "./icons/Logout";
 import { Mail } from "./icons/Mail";
+import { Male } from "./icons/Male";
 import { ManageAccounts } from "./icons/ManageAccounts";
 import { ManageClientPayments } from "./icons/ManageClientPayments";
 import { ManageHistory } from "./icons/ManageHistory";
@@ -393,6 +398,7 @@ import { Table } from "./icons/Table";
 import { TableConvert } from "./icons/TableConvert";
 import { TableRows } from "./icons/TableRows";
 import { TaskAlt } from "./icons/TaskAlt";
+import { TextFields } from "./icons/TextFields";
 import { Timelapse } from "./icons/Timelapse";
 import { TransitEnterExit } from "./icons/TransitEnterExit";
 import { Tune } from "./icons/Tune";
@@ -413,6 +419,7 @@ import { UploadFile } from "./icons/UploadFile";
 import { ValidatedInvoices } from "./icons/ValidatedInvoices";
 import { VerySatisfied } from "./icons/VerySatisfied";
 import { Visibility } from "./icons/Visibility";
+import { VisibilityBadge } from "./icons/VisibilityBadge";
 import { VisibilityLock } from "./icons/VisibilityLock";
 import { VisibilityOff } from "./icons/VisibilityOff";
 import { Warning } from "./icons/Warning";
@@ -479,6 +486,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   BusinessManagementTables,
   Calculate,
   CalendarActivity,
+  CalendarAi,
   CalendarClock,
   CalendarMonth,
   CalendarProfile,
@@ -586,6 +594,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   Extension,
   FaceId,
   Fax,
+  Female,
   Figma,
   FileExport,
   FileImport,
@@ -629,6 +638,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   IndeterminateQuestionBox,
   Info,
   InsertPageBreak,
+  Instruction,
   InvoiceBillableClients,
   InvoiceCancellation,
   InvoiceCredit,
@@ -655,6 +665,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   LastPage,
   LeftPanelClose,
   LeftPanelOpen,
+  License,
   Lightbulb,
   LightMode,
   Link,
@@ -669,6 +680,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   LockOpenRight,
   Logout,
   Mail,
+  Male,
   ManageAccounts,
   ManageClientPayments,
   ManageHistory,
@@ -825,6 +837,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   TableConvert,
   TableRows,
   TaskAlt,
+  TextFields,
   Timelapse,
   TransitEnterExit,
   Tune,
@@ -845,6 +858,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   ValidatedInvoices,
   VerySatisfied,
   Visibility,
+  VisibilityBadge,
   VisibilityLock,
   VisibilityOff,
   Warning,

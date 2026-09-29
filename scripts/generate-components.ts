@@ -3,12 +3,25 @@
  *
  * Reads optimised SVGs from svg/{variant}/ and generates:
  *   - src/icons/{IconName}.tsx   (one per icon, all variants+spacings inline)
- *   - src/types.ts
+ *   - src/types.ts               (IconName union; the IconColor union is preserved)
  *   - src/utils.ts
- *   - src/styles/icons.css
+ *   - src/registry.ts
  *   - src/index.ts               (barrel export)
  *
- * Usage:  tsx scripts/generate-components.ts
+ * NOT generated here: src/styles/icons.css and the IconColor union belong to
+ * scripts/sync-icon-colors.ts (`pnpm sync-colors`), which derives them from
+ * comete-design-tokens. This script never touches them.
+ *
+ * Additive: icons already present in src/icons/ are always kept, even when
+ * absent from svg/. Nothing is ever removed by this script.
+ *
+ * RULE (absolute): a generated component must not contain any hardcoded color.
+ * The script aborts if one does (fix the mapping in optimize-svg.ts).
+ *
+ * Usage:
+ *   tsx scripts/generate-components.ts                       # every icon in svg/
+ *   tsx scripts/generate-components.ts --only DeployedCode   # only that icon
+ *   tsx scripts/generate-components.ts --only A,B --only C   # several icons
  */
 
 import {
@@ -24,7 +37,7 @@ const ROOT = join(import.meta.dirname!, "..");
 const SVG_DIR = join(ROOT, "svg");
 const SRC_DIR = join(ROOT, "src");
 const ICONS_DIR = join(SRC_DIR, "icons");
-const STYLES_DIR = join(SRC_DIR, "styles");
+const TYPES_PATH = join(SRC_DIR, "types.ts");
 const VARIANTS = ["outlined", "filled", "duotone"] as const;
 // SVG filenames use 24 (spacing=default, with padding) and 16 (spacing=none, no padding)
 const SPACINGS = ["default", "none"] as const;
@@ -33,23 +46,47 @@ const FILE_TO_SPACING: Record<string, string> = {
   "16": "none",
 };
 
-const ICON_COLORS = [
-  "default",
-  "disabled",
-  "inverted",
-  "on-warning",
-  "warning",
-  "critical",
-  "success",
-  "brand",
-  "selected",
-  "information",
-  "subtle",
-  "subtlest",
-  "accent",
-  "day",
-  "night",
-] as const;
+/** Matches a hardcoded color in a generated component (hex or rgb/hsl). */
+const HARDCODED_COLOR_RE =
+  /\b(?:fill|stroke|stopColor|color)="(#[0-9a-fA-F]{3,8}|rgba?\([^)]*\)|hsla?\([^)]*\))"/g;
+
+/** Parses `--only A,B --only C` into a Set of icon names (empty = no filter). */
+function parseOnly(argv: string[]): Set<string> {
+  const only = new Set<string>();
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === "--only" && argv[i + 1]) {
+      for (const n of argv[++i]!.split(",")) if (n.trim()) only.add(n.trim());
+    } else if (argv[i]!.startsWith("--only=")) {
+      for (const n of argv[i]!.slice(7).split(","))
+        if (n.trim()) only.add(n.trim());
+    }
+  }
+  return only;
+}
+
+/**
+ * Reads the IconColor union from the existing src/types.ts.
+ * It is owned by sync-icon-colors.ts and must survive regeneration untouched.
+ */
+function readExistingIconColors(): string[] {
+  if (!existsSync(TYPES_PATH)) {
+    throw new Error(
+      "src/types.ts not found — run `pnpm sync-colors` first to create the IconColor union",
+    );
+  }
+  const match = readFileSync(TYPES_PATH, "utf-8").match(
+    /export type IconColor =\n([\s\S]*?);/,
+  );
+  const colors = match
+    ? [...match[1]!.matchAll(/\|\s*"([^"]+)"/g)].map((m) => m[1]!)
+    : [];
+  if (colors.length === 0) {
+    throw new Error(
+      "IconColor union not found in src/types.ts — run `pnpm sync-colors` first",
+    );
+  }
+  return colors;
+}
 
 /** Sort icon names using natural/locale sort to match Biome's import ordering */
 function sortIconNames(names: string[]): string[] {
@@ -114,7 +151,7 @@ type IconMap = Map<
   >
 >;
 
-function buildIconMap(): IconMap {
+function buildIconMap(only: Set<string>): IconMap {
   const iconMap: IconMap = new Map();
 
   for (const variant of VARIANTS) {
@@ -136,6 +173,7 @@ function buildIconMap(): IconMap {
       const iconName = rawName.replace(/[\s-]+(.)/g, (_, c: string) =>
         c.toUpperCase(),
       );
+      if (only.size > 0 && !only.has(iconName)) continue;
       const spacing = FILE_TO_SPACING[fileSize] as (typeof SPACINGS)[number];
       const svg = readFileSync(join(dir, file), "utf-8");
       const inner = extractSvgInner(svg);
@@ -161,7 +199,7 @@ function buildIconMap(): IconMap {
 
 // ─── Generate types.ts ─────────────────────────────────────────────────────
 
-function generateTypes(iconNames: string[]): string {
+function generateTypes(iconNames: string[], iconColors: string[]): string {
   const sorted = sortIconNames(iconNames);
   return `import type { SVGAttributes } from "react";
 
@@ -170,7 +208,7 @@ export type IconSpacing = "default" | "none";
 export type IconVariant = "outlined" | "filled" | "duotone";
 
 export type IconColor =
-${ICON_COLORS.map((c) => `  | "${c}"`).join("\n")};
+${iconColors.map((c) => `  | "${c}"`).join("\n")};
 
 /** Union of every available icon name (auto-generated from SVG sources). */
 export type IconName =
@@ -211,23 +249,6 @@ export function getIconClass(color: IconColor): string {
   return \`\${PREFIX}--\${color}\`;
 }
 `;
-}
-
-// ─── Generate CSS ──────────────────────────────────────────────────────────
-
-function generateCss(): string {
-  const lines = [
-    "/* Auto-generated — do not edit manually */",
-    "/* Maps icon color props to Comète design token CSS custom properties */",
-    "",
-  ];
-
-  for (const color of ICON_COLORS) {
-    lines.push(`.comete-icon--${color} {\n  color: var(--icon-${color});\n}`);
-  }
-
-  lines.push("");
-  return lines.join("\n");
 }
 
 // ─── Generate component ────────────────────────────────────────────────────
@@ -383,29 +404,49 @@ function generateIndex(iconNames: string[]): string {
 // ─── Main ──────────────────────────────────────────────────────────────────
 
 function main() {
-  console.log("🔨 Building icon map from SVGs…");
-  const iconMap = buildIconMap();
-  console.log(`   Found ${iconMap.size} icons`);
+  const only = parseOnly(process.argv.slice(2));
+  // Read before anything is written: the IconColor union is owned by sync-colors.
+  const iconColors = readExistingIconColors();
 
-  // Ensure dirs
-  for (const dir of [ICONS_DIR, STYLES_DIR]) {
-    if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  console.log("🔨 Building icon map from SVGs…");
+  const iconMap = buildIconMap(only);
+  console.log(
+    `   Found ${iconMap.size} icons${only.size > 0 ? ` (--only ${[...only].join(",")})` : ""}`,
+  );
+
+  if (only.size > 0) {
+    const missing = [...only].filter((n) => !iconMap.has(n));
+    if (missing.length > 0) {
+      console.error(`❌ No SVG found in svg/ for: ${missing.join(", ")}`);
+      process.exit(1);
+    }
   }
+
+  if (!existsSync(ICONS_DIR)) mkdirSync(ICONS_DIR, { recursive: true });
 
   // Generate components first to collect icon names
   const iconNames: string[] = [];
+  const offenders: string[] = [];
   for (const [name, variants] of iconMap) {
-    writeFileSync(
-      join(ICONS_DIR, `${name}.tsx`),
-      generateComponent(name, variants),
-      "utf-8",
-    );
+    const source = generateComponent(name, variants);
+    for (const m of source.matchAll(HARDCODED_COLOR_RE)) {
+      offenders.push(`${name}: ${m[1]}`);
+    }
+    writeFileSync(join(ICONS_DIR, `${name}.tsx`), source, "utf-8");
     iconNames.push(name);
+  }
+  if (offenders.length > 0) {
+    console.error(
+      `\n❌ ${offenders.length} hardcoded color(s) in generated components.` +
+        " Map them to design tokens in scripts/optimize-svg.ts, then re-run optimize + generate:",
+    );
+    for (const o of offenders) console.error(`   - ${o}`);
+    process.exit(1);
   }
 
   // Additif : conserver les composants déjà présents dans src/icons/ mais absents
-  // de Figma (le pipeline n'enlève jamais d'icône du paquet). Leur .tsx existant
-  // n'est pas régénéré ; on l'inclut simplement dans les types/registry/barrel.
+  // de Figma ou exclus par --only (le pipeline n'enlève jamais d'icône du paquet).
+  // Leur .tsx existant n'est pas régénéré ; on l'inclut dans types/registry/barrel.
   const generated = new Set(iconNames);
   const kept: string[] = [];
   for (const file of readdirSync(ICONS_DIR)) {
@@ -416,21 +457,19 @@ function main() {
       kept.push(name);
     }
   }
-  if (kept.length > 0) {
+  if (kept.length > 0 && only.size === 0) {
     console.log(
       `   ↳ ${kept.length} icône(s) conservée(s) (absentes de Figma) : ${kept.join(", ")}`,
     );
+  } else if (kept.length > 0) {
+    console.log(`   ↳ ${kept.length} icône(s) existante(s) conservée(s)`);
   }
   console.log(`   ✓ ${iconNames.length} icon components`);
 
   // Generate types + utils (types needs iconNames for IconName union)
-  writeFileSync(join(SRC_DIR, "types.ts"), generateTypes(iconNames), "utf-8");
+  writeFileSync(TYPES_PATH, generateTypes(iconNames, iconColors), "utf-8");
   writeFileSync(join(SRC_DIR, "utils.ts"), generateUtils(), "utf-8");
-  console.log("   ✓ types.ts + utils.ts");
-
-  // Generate CSS
-  writeFileSync(join(STYLES_DIR, "icons.css"), generateCss(), "utf-8");
-  console.log("   ✓ styles/icons.css");
+  console.log("   ✓ types.ts (IconColor preserved) + utils.ts");
 
   // Generate registry (maps icon names to components)
   writeFileSync(

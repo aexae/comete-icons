@@ -11,7 +11,7 @@ const svgData: Record<string, Record<string, { viewBox: string; paths: React.JSX
       "none": { viewBox: "0 0 16 16", paths: <><path fill="currentColor" d="M0 14.4 4.8 8 0 1.6h10.4a1.59 1.59 0 0 1 1.28.64L16 8l-4.32 5.76q-.22.3-.56.47a1.6 1.6 0 0 1-.72.17z"/></> }
     },
     duotone: {
-      "default": { viewBox: "0 0 24 24", paths: <><path fill="currentColor" fillRule="evenodd" d="m3 5 5.4 7h2.25L6.6 6.75h8.1L18.75 12H21l-4.86-6.3a1.7 1.7 0 0 0-.63-.514A1.8 1.8 0 0 0 14.7 5z" clipRule="evenodd"/><path fill="var(--icon-information)" d="M8.4 12 3 19h11.7q.428 0 .81-.186t.63-.514L21 12h-2.25l-4.05 5.25H6.6L10.65 12z"/></> },
+      "default": { viewBox: "0 0 24 24", paths: <><path fill="var(--icon-information)" d="M4 20q-.824 0-1.412-.587A1.93 1.93 0 0 1 2 18V6q0-.824.587-1.412A1.93 1.93 0 0 1 4 4h11a1.99 1.99 0 0 1 1.6.8L22 12l-5.4 7.2q-.275.375-.7.588A2 2 0 0 1 15 20zm0-2h11l4.5-6L15 6H4z"/></> },
       "none": { viewBox: "0 0 16 16", paths: <><path fill="currentColor" fillRule="evenodd" d="M0 1.6 4.8 8h2L3.2 3.2h7.2L14 8h2l-4.32-5.76a1.59 1.59 0 0 0-1.28-.64z" clipRule="evenodd"/><path fill="var(--icon-information)" d="M4.8 8 0 14.4h10.4a1.59 1.59 0 0 0 1.28-.64L16 8h-2l-3.6 4.8H3.2L6.8 8z"/></> }
     }
 };

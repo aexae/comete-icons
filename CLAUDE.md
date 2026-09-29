@@ -31,8 +31,9 @@ comete-icons/
 | `pnpm figma:sync` | Export incrémental des SVGs depuis Figma (ne re-télécharge que les changements) |
 | `pnpm figma:sync -- --force` | Re-télécharge tous les SVGs (ignore le cache/manifeste) |
 | `pnpm figma:sync -- --debug` | Mode debug : affiche l'arbre Figma pour diagnostic |
-| `pnpm optimize` | Optimise les SVGs avec SVGO |
-| `pnpm generate` | Génère les composants React depuis les SVGs |
+| `pnpm optimize` | Optimise les SVGs avec SVGO (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
+| `pnpm generate` | Génère les composants React depuis les SVGs (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
+| `pnpm sync-colors` | Génère `src/styles/icons.css` + l'union `IconColor` depuis comete-design-tokens (seul propriétaire de ces deux sorties) |
 | `pnpm pipeline` | fetch → optimize → generate (chaîne complète) |
 | `pnpm build` | Build ESM avec tsup |
 
@@ -46,23 +47,26 @@ comete-icons/
 
 **Règle absolue : ne jamais utiliser de couleur en dur (hex, rgb, etc.) dans les SVGs ou composants générés.** Toutes les couleurs doivent passer par des design tokens CSS (`var(--token)`). Si un token manque, demander à l'utilisateur avant de procéder.
 
+Cette règle est **vérifiée mécaniquement** à trois niveaux :
+- `pnpm optimize` échoue s'il reste un hex/rgb dans un SVG optimisé (liste les fichiers fautifs) ;
+- `pnpm generate` échoue si un composant généré contient un hex/rgb ;
+- `src/no-hardcoded-colors.test.ts` (dans `pnpm test`, donc dans `prepublishOnly` et la CI) échoue si un composant de `src/icons/` ou `src/styles/icons.css` contient un hex/rgb.
+
+**Tokens interdits dans une icône** : `--icon-selected` (couleur d'interaction, portée par le composant hôte). La garde le refuse au même titre qu'un hex.
+
+Pour résoudre un échec : chercher la valeur hex dans `comete-design-tokens/build/css/comete-tokens.css` (bloc `:root`, thème clair), préférer un token `--icon-*` (ou `--logo-*` pour les icônes produit Comète), l'ajouter dans `DUOTONE_COLOR_TO_TOKEN` de `scripts/optimize-svg.ts`, relancer `optimize` + `generate`. Ne jamais deviner un token : sans correspondance, demander.
+
 - **Outlined / Filled** : tous les tracés utilisent `currentColor` (contrôlé par la prop `color` → classe CSS → token `--icon-*`)
 - **Duotone** : deux couches de couleur :
   - Tracés **primaires** (couleur Figma `#455D84` = `--icon-default`) → `currentColor`
-  - Tracés **secondaires** : couleur d'accent mappée vers un token CSS. Mapping actuel :
-    - `#007ADA` → `var(--icon-information)`
-    - `#856D0E` → `var(--icon-warning)`
-    - `#E12121` → `var(--icon-critical)`
+  - Tracés **secondaires** : couleur d'accent mappée vers un token CSS. Le mapping de référence est `DUOTONE_COLOR_TO_TOKEN` dans `scripts/optimize-svg.ts` (ex. `#E12121` → `var(--icon-critical)`, `#009B60` → `var(--icon-success)`, `#8270DB` → `var(--icon-accent-purple)`). Les dégradés des icônes produit Comète utilisent `--logo-comete-gradient-light/dark` et `--logo-comete-neutral`.
 - La prop `color` mappe vers les CSS custom properties de `@aexae/comete-design-tokens` : `--icon-default`, `--icon-success`, etc.
 
-### ⚠️ `src/styles/icons.css` appartient à `sync-icon-colors.ts`, PAS à `generate`
+### `src/styles/icons.css` et l'union `IconColor` appartiennent à `sync-icon-colors.ts`
 
-Le fichier `src/styles/icons.css` (mapping `color` → token, ex. `.comete-icon--accentBlueGrey`) est la sortie de **`pnpm sync-colors`** (`sync-icon-colors.ts`), qui couvre le jeu de couleurs **complet** (`accentBlueGrey/Magenta/Purple/Teal/Turquoise`, `bold`, `comete`, …).
+Le fichier `src/styles/icons.css` (mapping `color` → token, ex. `.comete-icon--accentBlueGrey`) et l'union `IconColor` de `src/types.ts` sont la sortie de **`pnpm sync-colors`**, qui les dérive des tokens `--icon-*` de comete-design-tokens.
 
-`pnpm generate` régénère aussi un `icons.css`, mais **appauvri** (jeu de couleurs réduit) → le commiter **régresse les couleurs**. Règles :
-
-- `pnpm sync-colors` **n'est pas** dans `pnpm pipeline` : après un `generate`/`pipeline`, **ne pas committer le `icons.css` produit par generate**. Soit relancer `pnpm sync-colors`, soit restaurer `git checkout -- src/styles/icons.css`.
-- Ajouter/retirer une icône **ne change pas** `icons.css` (il est par couleur, pas par icône) → il doit rester **inchangé** dans un diff d'ajout d'icône.
+`pnpm generate` **n'écrit jamais** `icons.css` et **préserve** l'union `IconColor` existante (il la relit depuis `types.ts` avant de régénérer l'union `IconName`). Ajouter/retirer une icône ne change donc jamais `icons.css`. Relancer `pnpm sync-colors` uniquement quand comete-design-tokens ajoute ou retire un token `--icon-*`.
 
 ## Export incrémental
 
@@ -91,10 +95,10 @@ Fichiers SVG : `{IconName}-{16|24}.svg`
 
 1. Ajouter l'icône dans la frame **"DO NOT DELETE THIS FRAME (targeted by script)"** du fichier Figma (3 variants × 2 spacings)
 2. Nommer la frame de l'icône `Icon/{NomEnPascalCase}` avec des instances portant les properties `variant` et `spacing`
-3. `FIGMA_TOKEN=xxx pnpm figma:sync && pnpm optimize && pnpm generate` (ou `pnpm pipeline`). ⚠️ ne pas utiliser `pnpm fetch` (commande built-in de pnpm). Le token est lu depuis la variable **`FIGMA_TOKEN`** (le `.env` peut la définir).
-4. **Revoir le diff.** Le pipeline est additif (il n'enlève rien) mais peut ajouter d'**autres** icônes présentes dans Figma. Pour n'ajouter QUE des icônes précises : restaurer le reste à HEAD (`git checkout -- src/icons src/index.ts src/types.ts src/registry.ts src/styles/icons.css`), garder seulement les `.tsx` voulus, puis insérer leurs entrées dans `index.ts`, `types.ts` (union **`IconName`** — pas `IconColor` !) et `registry.ts` (import + map). Vérifier que `src/styles/icons.css` reste **inchangé** (cf. section Couleurs).
+3. `FIGMA_TOKEN=xxx pnpm figma:sync` (⚠️ pas `pnpm fetch`, commande built-in de pnpm ; le token est lu depuis **`FIGMA_TOKEN`**, le `.env` peut la définir). Le sync remplit le cache local `svg/` (gitignoré) avec **tout** le fichier Figma, y compris des icônes volontairement non ajoutées au paquet.
+4. `pnpm optimize --only NomEnPascalCase && pnpm generate --only NomEnPascalCase` (plusieurs noms séparés par des virgules). Le filtre `--only` ne touche que l'icône visée : les autres composants, `index.ts`, `types.ts`, `registry.ts` et `icons.css` restent inchangés. Le diff attendu est exactement : `src/icons/Nom.tsx` + une ligne dans chacun de `index.ts`, `types.ts` (union `IconName`), `registry.ts` (import + map). Ne jamais lancer `optimize`/`generate` **sans** `--only` pour un ajout ciblé.
 5. `pnpm typecheck && pnpm lint && pnpm test && pnpm build`
-6. Commit + publish (bump de version)
+6. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
 
 ## Ajout d'une icône Material Symbols (hors Figma)
 
@@ -151,7 +155,7 @@ Le mapping hex → token est dans `scripts/optimize-svg.ts` (`DUOTONE_COLOR_TO_T
 ### Pipeline
 
 1. Placer les 6 SVGs dans `svg/{outlined,filled,duotone}/{PascalName}-{24,16}.svg`
-2. `pnpm optimize` → `pnpm generate` → `pnpm build`
+2. `pnpm optimize --only PascalName` → `pnpm generate --only PascalName` → `pnpm build`
 3. `npx biome check --write .` (les fichiers auto-générés nécessitent un fix d'imports)
-4. `pnpm lint && pnpm test`
-5. Bump version, commit, publish
+4. `pnpm typecheck && pnpm lint && pnpm test`
+5. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
