@@ -119,6 +119,7 @@ export { DateRange } from "./icons/DateRange";
 export { DecimalIncrease } from "./icons/DecimalIncrease";
 export { DeductedUnavailabilitiesHours } from "./icons/DeductedUnavailabilitiesHours";
 export { Delete } from "./icons/Delete";
+export { DeployedCode } from "./icons/DeployedCode";
 export { Description } from "./icons/Description";
 export { Deselect } from "./icons/Deselect";
 export { DesktopWindows } from "./icons/DesktopWindows";

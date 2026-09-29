@@ -144,6 +144,7 @@ export type IconName =
   | "DecimalIncrease"
   | "DeductedUnavailabilitiesHours"
   | "Delete"
+  | "DeployedCode"
   | "Description"
   | "Deselect"
   | "DesktopWindows"

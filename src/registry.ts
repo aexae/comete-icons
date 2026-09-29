@@ -115,6 +115,7 @@ import { DateRange } from "./icons/DateRange";
 import { DecimalIncrease } from "./icons/DecimalIncrease";
 import { DeductedUnavailabilitiesHours } from "./icons/DeductedUnavailabilitiesHours";
 import { Delete } from "./icons/Delete";
+import { DeployedCode } from "./icons/DeployedCode";
 import { Description } from "./icons/Description";
 import { Deselect } from "./icons/Deselect";
 import { DesktopWindows } from "./icons/DesktopWindows";
@@ -546,6 +547,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   DecimalIncrease,
   DeductedUnavailabilitiesHours,
   Delete,
+  DeployedCode,
   Description,
   Deselect,
   DesktopWindows,
