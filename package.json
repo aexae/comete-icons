@@ -1,6 +1,6 @@
 {
   "name": "@aexae/comete-icons",
-  "version": "0.7.5",
+  "version": "0.8.0",
   "description": "Comète icon library — React components with design token color support",
   "author": "aexae",
   "license": "AGPL-3.0-only",
@@ -45,7 +45,7 @@
     "prepublishOnly": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
   },
   "peerDependencies": {
-    "@aexae/comete-design-tokens": "^0.13.0",
+    "@aexae/comete-design-tokens": "^0.17.0",
     "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
