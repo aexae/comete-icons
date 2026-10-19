@@ -429,6 +429,7 @@ export type IconName =
   | "TaskAlt"
   | "TextFields"
   | "Timelapse"
+  | "Today"
   | "TransitEnterExit"
   | "Tune"
   | "Typography"

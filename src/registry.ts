@@ -400,6 +400,7 @@ import { TableRows } from "./icons/TableRows";
 import { TaskAlt } from "./icons/TaskAlt";
 import { TextFields } from "./icons/TextFields";
 import { Timelapse } from "./icons/Timelapse";
+import { Today } from "./icons/Today";
 import { TransitEnterExit } from "./icons/TransitEnterExit";
 import { Tune } from "./icons/Tune";
 import { Typography } from "./icons/Typography";
@@ -839,6 +840,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   TaskAlt,
   TextFields,
   Timelapse,
+  Today,
   TransitEnterExit,
   Tune,
   Typography,

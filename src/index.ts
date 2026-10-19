@@ -404,6 +404,7 @@ export { TableRows } from "./icons/TableRows";
 export { TaskAlt } from "./icons/TaskAlt";
 export { TextFields } from "./icons/TextFields";
 export { Timelapse } from "./icons/Timelapse";
+export { Today } from "./icons/Today";
 export { TransitEnterExit } from "./icons/TransitEnterExit";
 export { Tune } from "./icons/Tune";
 export { Typography } from "./icons/Typography";
