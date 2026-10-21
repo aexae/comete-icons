@@ -53,6 +53,8 @@ interface FigmaNode {
   id: string;
   name: string;
   type: string;
+  /** Absent = visible. L'API REST n'émet `visible: false` que pour un nœud masqué. */
+  visible?: boolean;
   children?: FigmaNode[];
 }
 
@@ -141,6 +143,14 @@ function collectIcons(
   depth = 0,
 ): IconEntry[] {
   const results: IconEntry[] = [];
+
+  // REASON: dans Figma, une icône masquée (elle ou un de ses conteneurs) est une
+  // icône non encore validée : elle ne doit jamais être exportée dans le paquet.
+  if (node.visible === false) {
+    if (DEBUG)
+      console.log(`${"  ".repeat(depth)}🙈 masqué, ignoré : ${node.name}`);
+    return results;
+  }
 
   // Detect Icon/Name containers (any type, not just FRAME)
   let iconName = parentIconName;
