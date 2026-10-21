@@ -1,6 +1,6 @@
 {
   "name": "@aexae/comete-icons",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Comète icon library — React components with design token color support",
   "author": "aexae",
   "license": "AGPL-3.0-only",
@@ -35,6 +35,7 @@
     "optimize": "tsx scripts/optimize-svg.ts",
     "generate": "tsx scripts/generate-components.ts",
     "sync-colors": "tsx scripts/sync-icon-colors.ts",
+    "sync-omnis": "tsx scripts/sync-omnis.ts",
     "pipeline": "pnpm figma:sync && pnpm optimize && pnpm generate && pnpm build",
     "build": "tsup",
     "clean": "rimraf dist",

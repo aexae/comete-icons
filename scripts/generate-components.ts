@@ -397,6 +397,14 @@ function generateIndex(iconNames: string[]): string {
   lines.push("// Registry");
   lines.push('export { iconRegistry } from "./registry";');
   lines.push("");
+  // REASON: omnis.ts est produit par sync-omnis, pas par ce script ; son export doit
+  // survivre à chaque régénération de index.ts.
+  lines.push("// Omnis");
+  lines.push(
+    'export { getIconByOmnisId, omnisIcons, omnisUnmappedIds } from "./omnis";',
+  );
+  lines.push('export type { OmnisIcon, OmnisIconId } from "./omnis";');
+  lines.push("");
 
   return lines.join("\n");
 }

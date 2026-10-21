@@ -45,6 +45,20 @@ function DynamicIcon({ name }: { name: IconName }) {
 }
 ```
 
+### Correspondance avec les ID Omnis
+
+`omnisIcons` associe l'identifiant d'icône Omnis (Comète desktop) à l'icône du paquet, avec la variante ou la couleur qui restitue l'état Omnis (ex. `2515` → `{ name: "CheckBox", color: "disabled" }`). `getIconByOmnisId` accepte un nombre ou une chaîne et renvoie `undefined` pour un ID inconnu. `omnisUnmappedIds` liste les ID du classeur sans icône dédiée.
+
+```tsx
+import { getIconByOmnisId, iconRegistry } from "@aexae/comete-icons";
+
+const icon = getIconByOmnisId(2515);
+const Component = icon ? iconRegistry[icon.name] : undefined;
+// <Component variant={icon.variant} color={icon.color} />
+```
+
+`src/omnis.ts` est généré, ne pas l'éditer. Source : onglet « Liste des icônes » du classeur SharePoint « Signification et usage des icônes.xlsx ». Pour le mettre à jour, exporter l'onglet en CSV puis lancer `pnpm sync-omnis chemin/vers/export.csv` : l'instantané `data/omnis-icons.csv` et `src/omnis.ts` sont régénérés. Le script échoue si un nom du classeur n'existe pas dans le paquet. Un test vérifie que `src/omnis.ts` correspond à l'instantané.
+
 ## Props
 
 | Prop | Type | Défaut | Description |
@@ -97,6 +111,7 @@ comete-icons/
 | `pnpm optimize` | Optimise les SVGs avec SVGO (couleurs → `currentColor`) |
 | `pnpm generate` | Génère les composants React, le registry et les types |
 | `pnpm sync-colors` | Régénère `icons.css` et `IconColor` depuis les tokens |
+| `pnpm sync-omnis [export.csv]` | Régénère `src/omnis.ts` (dictionnaire ID Omnis) depuis un export CSV du classeur |
 | `pnpm pipeline` | `figma:sync` → `optimize` → `generate` → `build` |
 | `pnpm build` | Bundle ESM tree-shakeable (tsup) |
 | `pnpm typecheck` / `pnpm lint` / `pnpm test` | Validation (TypeScript, Biome, Vitest) |

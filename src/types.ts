@@ -385,6 +385,7 @@ export type IconName =
   | "Search"
   | "SearchInsights"
   | "SearchOff"
+  | "Security"
   | "SelectAll"
   | "Send"
   | "SendDocumentToSign"
@@ -462,6 +463,7 @@ export type IconName =
   | "WifiOff"
   | "Word"
   | "Work"
+  | "WorkRange"
   | "Workspaces"
   | "Zip"
   | "ZoomOutMap";

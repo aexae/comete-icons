@@ -360,6 +360,7 @@ export { ScreenSearchDesktop } from "./icons/ScreenSearchDesktop";
 export { Search } from "./icons/Search";
 export { SearchInsights } from "./icons/SearchInsights";
 export { SearchOff } from "./icons/SearchOff";
+export { Security } from "./icons/Security";
 export { SelectAll } from "./icons/SelectAll";
 export { Send } from "./icons/Send";
 export { SendDocumentToSign } from "./icons/SendDocumentToSign";
@@ -437,9 +438,14 @@ export { Wifi } from "./icons/Wifi";
 export { WifiOff } from "./icons/WifiOff";
 export { Word } from "./icons/Word";
 export { Work } from "./icons/Work";
+export { WorkRange } from "./icons/WorkRange";
 export { Workspaces } from "./icons/Workspaces";
 export { Zip } from "./icons/Zip";
 export { ZoomOutMap } from "./icons/ZoomOutMap";
+export type { OmnisIcon, OmnisIconId } from "./omnis";
+// Omnis
+export { getIconByOmnisId, omnisIcons, omnisUnmappedIds } from "./omnis";
+
 // Registry
 export { iconRegistry } from "./registry";
 // Types

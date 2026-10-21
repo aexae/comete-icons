@@ -356,6 +356,7 @@ import { ScreenSearchDesktop } from "./icons/ScreenSearchDesktop";
 import { Search } from "./icons/Search";
 import { SearchInsights } from "./icons/SearchInsights";
 import { SearchOff } from "./icons/SearchOff";
+import { Security } from "./icons/Security";
 import { SelectAll } from "./icons/SelectAll";
 import { Send } from "./icons/Send";
 import { SendDocumentToSign } from "./icons/SendDocumentToSign";
@@ -433,6 +434,7 @@ import { Wifi } from "./icons/Wifi";
 import { WifiOff } from "./icons/WifiOff";
 import { Word } from "./icons/Word";
 import { Work } from "./icons/Work";
+import { WorkRange } from "./icons/WorkRange";
 import { Workspaces } from "./icons/Workspaces";
 import { Zip } from "./icons/Zip";
 import { ZoomOutMap } from "./icons/ZoomOutMap";
@@ -796,6 +798,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   Search,
   SearchInsights,
   SearchOff,
+  Security,
   SelectAll,
   Send,
   SendDocumentToSign,
@@ -873,6 +876,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   WifiOff,
   Word,
   Work,
+  WorkRange,
   Workspaces,
   Zip,
   ZoomOutMap,

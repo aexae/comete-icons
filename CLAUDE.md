@@ -34,6 +34,7 @@ comete-icons/
 | `pnpm optimize` | Optimise les SVGs avec SVGO (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
 | `pnpm generate` | Génère les composants React depuis les SVGs (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
 | `pnpm sync-colors` | Génère `src/styles/icons.css` + l'union `IconColor` depuis comete-design-tokens (seul propriétaire de ces deux sorties) |
+| `pnpm sync-omnis [export.csv]` | Génère `src/omnis.ts` (ID Omnis → icône) depuis `data/omnis-icons.csv` ou un export CSV du classeur (qui remplace alors l'instantané). Échoue si un nom est absent du paquet |
 | `pnpm pipeline` | fetch → optimize → generate (chaîne complète) |
 | `pnpm build` | Build ESM avec tsup |
 
@@ -77,6 +78,10 @@ Le script `fetch-icons.ts` utilise un manifeste (`svg/.manifest.json`) pour trac
   - Si identique → skip complet (aucun appel API supplémentaire)
   - Si différent → récupère l'arbre, compare les nodeIds pour détecter ajouts/suppressions/modifications
 - **`--force`** : ignore le manifeste et re-télécharge tout
+
+### ⚠️ Icône masquée = non validée (règle absolue)
+
+Dans Figma, une icône masquée (elle ou l'un de ses conteneurs) n'est **pas encore validée** : elle ne doit jamais être exportée. `fetch-icons.ts` ignore tout sous-arbre `visible: false`. Ne jamais démasquer une icône dans Figma, ni l'ajouter à la main au paquet, sans validation explicite.
 
 ### ⚠️ Pipeline ADDITIF (règle absolue)
 
@@ -159,3 +164,12 @@ Le mapping hex → token est dans `scripts/optimize-svg.ts` (`DUOTONE_COLOR_TO_T
 3. `npx biome check --write .` (les fichiers auto-générés nécessitent un fix d'imports)
 4. `pnpm typecheck && pnpm lint && pnpm test`
 5. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
+
+## Dictionnaire ID Omnis (`src/omnis.ts`)
+
+- **Généré** par `pnpm sync-omnis`, ne jamais l'éditer à la main (exclu de Biome pour que le test de fraîcheur compare l'octet près).
+- Source : onglet « Liste des icônes » du classeur SharePoint « Signification et usage des icônes.xlsx » (Design System / Icônes). Instantané versionné : `data/omnis-icons.csv`.
+- Résolution : nom exact du paquet, sinon suffixes d'état `Disabled` → `color: "disabled"` (prime), `Critical` → `color: "critical"`, `Filled` → `variant: "filled"`.
+- Un nom inconnu fait échouer le script, sauf ID listé dans `KNOWN_UNMAPPED_IDS` (`src/omnis-build.ts`). Corriger le classeur ou ajouter l'icône, jamais deviner.
+- Après l'ajout d'une icône qui a un ID Omnis : renseigner l'ID dans le classeur, exporter en CSV, `pnpm sync-omnis export.csv`.
+- Sources **obsolètes**, à ne jamais utiliser : onglet « Export » du classeur, `Correspondance omnisId-svgName.csv` et dossier `Icônes/svg` (archivés).
