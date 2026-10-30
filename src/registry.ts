@@ -360,6 +360,7 @@ import { Security } from "./icons/Security";
 import { SelectAll } from "./icons/SelectAll";
 import { Send } from "./icons/Send";
 import { SendDocumentToSign } from "./icons/SendDocumentToSign";
+import { Service } from "./icons/Service";
 import { Settings } from "./icons/Settings";
 import { SettingsBackupRestore } from "./icons/SettingsBackupRestore";
 import { SettlementsOfDebtorClients } from "./icons/SettlementsOfDebtorClients";
@@ -434,7 +435,6 @@ import { Wifi } from "./icons/Wifi";
 import { WifiOff } from "./icons/WifiOff";
 import { Word } from "./icons/Word";
 import { Work } from "./icons/Work";
-import { WorkRange } from "./icons/WorkRange";
 import { Workspaces } from "./icons/Workspaces";
 import { Zip } from "./icons/Zip";
 import { ZoomOutMap } from "./icons/ZoomOutMap";
@@ -802,6 +802,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   SelectAll,
   Send,
   SendDocumentToSign,
+  Service,
   Settings,
   SettingsBackupRestore,
   SettlementsOfDebtorClients,
@@ -876,7 +877,6 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   WifiOff,
   Word,
   Work,
-  WorkRange,
   Workspaces,
   Zip,
   ZoomOutMap,

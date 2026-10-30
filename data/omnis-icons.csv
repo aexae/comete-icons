@@ -349,7 +349,7 @@ ID Omnis;Nom
 180008;DateRange
 180009;ClockingBreak
 180010;ExpiredSignature
-180011;WorkRange
+180011;Service
 9001;CheckSmall
 9010;CheckSmall
 9020;CloseSmallCritical

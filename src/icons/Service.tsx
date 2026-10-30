@@ -16,7 +16,7 @@ const svgData: Record<string, Record<string, { viewBox: string; paths: React.JSX
     }
 };
 
-export function WorkRange({
+export function Service({
   size = 24,
   spacing = "default",
   variant = "outlined",
@@ -43,4 +43,4 @@ export function WorkRange({
   );
 }
 
-WorkRange.displayName = "WorkRange";
+Service.displayName = "Service";

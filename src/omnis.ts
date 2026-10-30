@@ -363,7 +363,7 @@ export const omnisIcons = {
   180007: { name: "CalendarActivity" },
   180008: { name: "DateRange" },
   180009: { name: "ClockingBreak" },
-  180011: { name: "WorkRange" },
+  180011: { name: "Service" },
   9001: { name: "CheckSmall" },
   9010: { name: "CheckSmall" },
   9020: { name: "CloseSmallCritical" },

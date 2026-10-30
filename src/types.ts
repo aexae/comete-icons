@@ -389,6 +389,7 @@ export type IconName =
   | "SelectAll"
   | "Send"
   | "SendDocumentToSign"
+  | "Service"
   | "Settings"
   | "SettingsBackupRestore"
   | "SettlementsOfDebtorClients"
@@ -463,7 +464,6 @@ export type IconName =
   | "WifiOff"
   | "Word"
   | "Work"
-  | "WorkRange"
   | "Workspaces"
   | "Zip"
   | "ZoomOutMap";

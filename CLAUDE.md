@@ -35,6 +35,7 @@ comete-icons/
 | `pnpm generate` | Génère les composants React depuis les SVGs (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
 | `pnpm sync-colors` | Génère `src/styles/icons.css` + l'union `IconColor` depuis comete-design-tokens (seul propriétaire de ces deux sorties) |
 | `pnpm sync-omnis [export.csv]` | Génère `src/omnis.ts` (ID Omnis → icône) depuis `data/omnis-icons.csv` ou un export CSV du classeur (qui remplace alors l'instantané). Échoue si un nom est absent du paquet |
+| `pnpm omnis:script --only Nom --omnis-id ID` | Génère le script d'import Omnis `ajout_icon_Nom_ID.txt` (PNG 16 px outlined + 32 px duotone encodés pour `#ICONS`). Voir « Génération du script d'import Omnis » |
 | `pnpm pipeline` | fetch → optimize → generate (chaîne complète) |
 | `pnpm build` | Build ESM avec tsup |
 
@@ -103,7 +104,8 @@ Fichiers SVG : `{IconName}-{16|24}.svg`
 3. `FIGMA_TOKEN=xxx pnpm figma:sync` (⚠️ pas `pnpm fetch`, commande built-in de pnpm ; le token est lu depuis **`FIGMA_TOKEN`**, le `.env` peut la définir). Le sync remplit le cache local `svg/` (gitignoré) avec **tout** le fichier Figma, y compris des icônes volontairement non ajoutées au paquet.
 4. `pnpm optimize --only NomEnPascalCase && pnpm generate --only NomEnPascalCase` (plusieurs noms séparés par des virgules). Le filtre `--only` ne touche que l'icône visée : les autres composants, `index.ts`, `types.ts`, `registry.ts` et `icons.css` restent inchangés. Le diff attendu est exactement : `src/icons/Nom.tsx` + une ligne dans chacun de `index.ts`, `types.ts` (union `IconName`), `registry.ts` (import + map). Ne jamais lancer `optimize`/`generate` **sans** `--only` pour un ajout ciblé.
 5. `pnpm typecheck && pnpm lint && pnpm test && pnpm build`
-6. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
+6. Si l'icône a un ID Omnis : `pnpm omnis:script --only NomEnPascalCase --omnis-id ID` (cf. « Génération du script d'import Omnis ») et livrer le `.txt`
+7. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
 
 ## Ajout d'une icône Material Symbols (hors Figma)
 
@@ -163,7 +165,8 @@ Le mapping hex → token est dans `scripts/optimize-svg.ts` (`DUOTONE_COLOR_TO_T
 2. `pnpm optimize --only PascalName` → `pnpm generate --only PascalName` → `pnpm build`
 3. `npx biome check --write .` (les fichiers auto-générés nécessitent un fix d'imports)
 4. `pnpm typecheck && pnpm lint && pnpm test`
-5. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
+5. Si l'icône a un ID Omnis : `pnpm omnis:script --only PascalName --omnis-id ID` (cf. « Génération du script d'import Omnis ») et livrer le `.txt`
+6. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
 
 ## Dictionnaire ID Omnis (`src/omnis.ts`)
 
@@ -173,3 +176,23 @@ Le mapping hex → token est dans `scripts/optimize-svg.ts` (`DUOTONE_COLOR_TO_T
 - Un nom inconnu fait échouer le script, sauf ID listé dans `KNOWN_UNMAPPED_IDS` (`src/omnis-build.ts`). Corriger le classeur ou ajouter l'icône, jamais deviner.
 - Après l'ajout d'une icône qui a un ID Omnis : renseigner l'ID dans le classeur, exporter en CSV, `pnpm sync-omnis export.csv`.
 - Sources **obsolètes**, à ne jamais utiliser : onglet « Export » du classeur, `Correspondance omnisId-svgName.csv` et dossier `Icônes/svg` (archivés).
+
+## Génération du script d'import Omnis (`pnpm omnis:script`)
+
+L'application historique Omnis stocke ses icônes en bitmaps dans la classe `#ICONS`. Pour qu'une icône du paquet y soit disponible, on génère un **script notation Omnis** qui importe le PNG de l'icône via `oIcons.$import_icon(id,bin,taille)`. Ce script reproduit la méthode `W_SCRIPT/script_icon` du code Omnis (blocs `;<replace><C_SCRIPTS/executed>` / `;<do>executed</do>`, PNG encodé hex par paquets de 5000 octets).
+
+```bash
+pnpm omnis:script --only Service --omnis-id 180011
+# → ajout_icon_Service_180011.txt dans « scripts by claude »
+```
+
+- **Deux tailles importées** dans `#ICONS`, exactement ce qu'attend Omnis (16 / 32 / 48 px, pas de 24) :
+  - **16 px** : variante **outlined**, spacing **none** (`svg/outlined/Nom-16.svg`).
+  - **32 px** : variante **duotone**, spacing **default** (`svg/duotone/Nom-24.svg`), la glyphe 24 px centrée dans un canevas 32 px.
+- **Couleurs** résolues en hex depuis le CSS compilé de comete-design-tokens (thème clair, même source que `sync-colors`) : `currentColor` → `--icon-default`, `var(--icon-*)` → sa valeur. Jamais de couleur devinée (échoue si le token est absent).
+- **ID Omnis jamais deviné** : `--omnis-id` est obligatoire et doit provenir du classeur SharePoint. Le script avertit si le couple (ID, nom) diverge de `data/omnis-icons.csv`, mais **n'écrit pas** le classeur (il reste la source) : pour la résolution `getIconByOmnisId`, renseigner le classeur puis `pnpm sync-omnis`.
+- **Format Comète** (cf. skill `script-omnis-comete`) : ligne 1 obligatoire `;<#>6829</#>` + base64 d'une description HTML (UTF-8), sinon Comète refuse le script (« Format de script incorrect »). Le chargeur `C_SCRIPTS` ne valide que ce préambule ; la description (par défaut « Ajout de l'icône … », surchargeable par `--description`) est informative. Corps en Windows-1252, lignes séparées par CR seul, sans BOM. Vérifier le script produit avec l'outil de la skill (`python omnis_script.py <script.txt>`) et **W_ANALYSE_SCRIPT** avant exécution dans Omnis (il écrase toute modif postérieure à l'export).
+- **Prérequis** : les SVG optimisés doivent exister dans `svg/` (lancer `pnpm optimize --only Nom` avant). Le dépôt `comete-design-tokens` doit être cloné en voisin et buildé.
+- **Destination** : `$OMNIS_SCRIPTS_DIR`, sinon le dossier « scripts by claude » (surchargeable par `--out-dir`). Fichier nommé `ajout_icon_<Nom>_<ID>.txt`.
+
+> **Étape de pipeline** : à tout ajout ou remplacement d'icône destinée à Omnis, après `optimize`/`generate`, lancer `pnpm omnis:script --only Nom --omnis-id ID` et livrer le `.txt` produit à l'équipe Omnis.

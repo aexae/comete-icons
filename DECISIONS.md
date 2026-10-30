@@ -1,5 +1,16 @@
 # Décisions
 
+## 30/10/2026 : renommage WorkRange → Service + pipeline de script Omnis
+
+- **Décision 1 — renommage** : l'icône `WorkRange` (Figma `1969:1124`, « Période de travail / Service ») est renommée **`Service`**. Les noms `WorkRange` et `ViewTimeline` sont abandonnés au profit de `Service` (décision d'Axel). L'ID Omnis `180011` est réaffecté de `WorkRange` à `Service` (classeur + `data/omnis-icons.csv` + `omnis.ts`).
+- **Contexte** : Axel a d'abord demandé `chart_gantt` (inexistant dans Material Symbols), puis `view_timeline`. J'ai ajouté `ViewTimeline` depuis Material Symbols, mais il s'agit de la **même icône** que `WorkRange` déjà présente (même glyphe Gantt). Le duotone de WorkRange est le bon (barres `var(--icon-information)`, cadre `currentColor`), celui de ma version Material Symbols était monochrome. Le design qui fait foi est donc le Figma `1969:1124` = l'ancienne `WorkRange`. `ViewTimeline` (Material Symbols) a été supprimée.
+- **Changement cassant** : `WorkRange` et `ViewTimeline` ne sont plus exportées par le paquet ; utiliser `Service`.
+- **Décision 2 — pipeline Omnis** : nouveau `scripts/generate-omnis-script.ts` (`pnpm omnis:script --only Nom --omnis-id ID`). Génère le script Omnis `ajout_icon_Nom_ID.txt` (format `W_SCRIPT/script_icon` : PNG hex par paquets de 5000 octets, `oIcons.$import_icon`). Importe l'icône en **16 px outlined/none** et **32 px duotone/default** (glyphe 24 centrée dans 32, Omnis ne connaît pas le 24). Couleurs résolues depuis le CSS tokens voisin (clair) ; rasterisation via `@resvg/resvg-js` (ajouté en devDep). L'ID Omnis est un paramètre **obligatoire** (jamais deviné) ; le script avertit en cas de divergence avec le CSV mais n'écrit pas le classeur (il reste la source).
+- **Décision 2b — en-tête Comète** : conformément à la skill `script-omnis-comete` (dossier `skills/script-omnis-comete`), ligne 1 `;<#>6829</#>` + base64 d'une description HTML (UTF-8), corps en Windows-1252, CR seul, sans BOM. Vérifié dans la source `C_SCRIPTS` : le chargeur n'exige que le préambule `;<#>6829</#>` (sinon « Format de script incorrect ») ; la description est informative (défaut auto, surchargeable par `--description`). Le gabarit HTML de `entete()` de la skill a été reproduit à l'identique dans `generate-omnis-script.ts` : l'en-tête produit est **byte-identique** à `omnis_script.entete()` (2232 caractères) et le `.txt` passe le vérificateur de la skill (`python omnis_script.py <script.txt>` → OK).
+- **Décision 3 — bouton Storybook** : reporté (Axel : « pipeline d'abord »). À faire ensuite dans `Icon.stories.tsx` (rendu PNG + hex côté navigateur).
+- **Livré pour Service** : `ajout_icon_Service_180011.txt` déposé dans « scripts by claude ».
+- **Statut** : livré en **0.10.0** (bump mineur car changement cassant : WorkRange/ViewTimeline retirées).
+
 ## 21/10/2026 : ajout de l'icône WorkRange
 
 - **Décision** : ajout de `WorkRange` (Figma node 1969:1124, « Période de travail / Service ») via `figma:sync` puis `optimize`/`generate --only WorkRange`.
