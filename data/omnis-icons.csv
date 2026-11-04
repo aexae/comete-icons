@@ -104,7 +104,7 @@ ID Omnis;Nom
 99990803;Notifications
 99990804;NotificationsAdd
 99990805;NightLight
-99990806;WbSunny
+99990806;Sunny
 99990807;ShoppingCart
 99990808;SaveSettings
 99990809;KeyboardDoubleArrowLeft
@@ -348,7 +348,7 @@ ID Omnis;Nom
 180007;CalendarActivity
 180008;DateRange
 180009;ClockingBreak
-180010;ExpiredSignature
+180010;SignatureExpired
 180011;Service
 9001;CheckSmall
 9010;CheckSmall

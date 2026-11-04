@@ -16,7 +16,6 @@ import { Agent } from "./icons/Agent";
 import { Alarm } from "./icons/Alarm";
 import { AlarmHandled } from "./icons/AlarmHandled";
 import { AlarmPostponed } from "./icons/AlarmPostponed";
-import { AlternateEmail } from "./icons/AlternateEmail";
 import { Api } from "./icons/Api";
 import { Archive } from "./icons/Archive";
 import { ArrowBack } from "./icons/ArrowBack";
@@ -327,6 +326,7 @@ import { Receivables } from "./icons/Receivables";
 import { ReceivablesRemindersStatus } from "./icons/ReceivablesRemindersStatus";
 import { RecommendResource } from "./icons/RecommendResource";
 import { Redo } from "./icons/Redo";
+import { Reference } from "./icons/Reference";
 import { Remove } from "./icons/Remove";
 import { RemoveItem } from "./icons/RemoveItem";
 import { RemovePhoto } from "./icons/RemovePhoto";
@@ -370,6 +370,7 @@ import { Shelves } from "./icons/Shelves";
 import { Shield } from "./icons/Shield";
 import { ShoppingCart } from "./icons/ShoppingCart";
 import { ShowArchives } from "./icons/ShowArchives";
+import { SignatureExpired } from "./icons/SignatureExpired";
 import { SimulationAdd } from "./icons/SimulationAdd";
 import { Simulations } from "./icons/Simulations";
 import { Site } from "./icons/Site";
@@ -392,6 +393,7 @@ import { Straighten } from "./icons/Straighten";
 import { SubContractor } from "./icons/SubContractor";
 import { SubcontractorFilter } from "./icons/SubcontractorFilter";
 import { SubcontractorOrder } from "./icons/SubcontractorOrder";
+import { Sunny } from "./icons/Sunny";
 import { SupportAgent } from "./icons/SupportAgent";
 import { SwapVert } from "./icons/SwapVert";
 import { SwitchAccount } from "./icons/SwitchAccount";
@@ -427,7 +429,6 @@ import { VisibilityLock } from "./icons/VisibilityLock";
 import { VisibilityOff } from "./icons/VisibilityOff";
 import { Warning } from "./icons/Warning";
 import { WarningDot } from "./icons/WarningDot";
-import { WbSunny } from "./icons/WbSunny";
 import { Week } from "./icons/Week";
 import { West } from "./icons/West";
 import { WhereToVote } from "./icons/WhereToVote";
@@ -458,7 +459,6 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   Alarm,
   AlarmHandled,
   AlarmPostponed,
-  AlternateEmail,
   Api,
   Archive,
   ArrowBack,
@@ -769,6 +769,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   ReceivablesRemindersStatus,
   RecommendResource,
   Redo,
+  Reference,
   Remove,
   RemoveItem,
   RemovePhoto,
@@ -812,6 +813,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   Shield,
   ShoppingCart,
   ShowArchives,
+  SignatureExpired,
   SimulationAdd,
   Simulations,
   Site,
@@ -834,6 +836,7 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   SubContractor,
   SubcontractorFilter,
   SubcontractorOrder,
+  Sunny,
   SupportAgent,
   SwapVert,
   SwitchAccount,
@@ -869,7 +872,6 @@ export const iconRegistry: Record<IconName, ComponentType<IconProps>> = {
   VisibilityOff,
   Warning,
   WarningDot,
-  WbSunny,
   Week,
   West,
   WhereToVote,

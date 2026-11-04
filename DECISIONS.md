@@ -1,5 +1,26 @@
 # Décisions
 
+## 04/11/2026 : alignements Figma → paquet (0.11.0)
+
+- **`SignatureExpired`** ajoutée depuis Figma (1804:1604) : document soumis à une signature électronique qui a expiré. C'est l'icône attendue pour l'ID 180010, auparavant non mappé sous le nom `ExpiredSignature`. Classeur (C351) et instantané renommés `SignatureExpired`.
+- **`Sunny`** (Figma 620:7812) remplace **`WbSunny`** (icône Material ajoutée hors Figma). ID 99990806 renommé dans le classeur (C107) et l'instantané. Le nom Figma fait foi.
+- **`Reference`** ajoutée depuis Figma (620:3009), distincte de `LabelImportant`. Le tag « Référence (commande) » est retiré de `LabelImportant`. Pas d'ID Omnis attribué (jamais deviné).
+- **`AlternateEmail` retirée du paquet** : Axel l'a supprimée de Figma, il n'en reste qu'une copie masquée (620:4944), donc non validée. ID 170004 passe dans `KNOWN_UNMAPPED_IDS`. `Videocam` supprimée de Figma (jamais dans le paquet).
+- **Changement cassant** : `WbSunny` et `AlternateEmail` ne sont plus exportées (remplacer `WbSunny` par `Sunny`). Bump mineur 0.11.0.
+- **Non régénérées** : le sync a récupéré une version Figma nouvelle ou modifiée de `CalendarToday`, `Camera`, `Female`, `New`, `Service`, `Today`, `Wifi`, `WifiOff`. Laissées telles quelles (hors demande), cf. TODO.
+
+## 30/10/2026 : tags de recherche des icônes
+
+- **Décision** : tags d'usage stockés dans `data/icon-tags.csv` (CSV propre, une rangée par icône, relu en PR), générés en `src/tags.ts` par `pnpm sync-tags`, publiés dans le paquet avec `searchIcons` (nom, tags, ID Omnis, sans accents ni casse).
+- **Contexte** : dans l'explorer Storybook, le nom technique (souvent Material) ne dit rien de l'usage dans Comète. Axel refuse le classeur SharePoint comme source directe (trop de bruit) : il ne sert qu'à l'amorçage.
+- **Amorçage** : colonne « Signification » du classeur (lignes « Remplacé par… » et mentions « remplacer par » écartées, colonne « Remarques design / dev » écartée car surtout des codes internes) + titre, exemple et section de chaque icône sur la page Figma 620:2966 (exemples « ??? » et « Example » écartés).
+- **Publication dans le paquet** (pas seulement Storybook) : une application Comète peut réutiliser la même recherche. `search.ts` n'importe que des données, aucun composant.
+- **Figma** : les ID Omnis et les tags seront recopiés dans la description de chaque composant (cherchable dans le panneau Assets), depuis le CSV. Le CSV reste la source.
+- **Reporté** : comment les développeurs suggèrent ou renseignent des tags (piste : commentaires Figma). Axel leur pose la question.
+- **04/11/2026, relecture d'Axel** : retrait des tags en forme de chemin d'accès à une fonctionnalité (« Plan. > Menu vacation »), refusés désormais par `sync-tags`. Les sections Figma en anglais restent des tags. Les tags d'écran (« Fenêtre agent ») sont conservés.
+- **04/11/2026, exemples d'usage retirés** (règle d'Axel) : les sous-titres gris de la page Figma (« Fenêtre agent », « Raccourcis personnels », « Plateforme »…) sont des exemples d'endroits où l'icône est utilisée, pas des tags. CSV reconstruit une fois depuis les sources actuelles (significations du classeur + titres et sections Figma), car le classeur avait évolué depuis l'amorçage : 391 tags retirés, 17 ajoutés.
+- **04/11/2026, descriptions Figma écrites** : 408 composants `Icon/*` visibles (`pnpm figma:descriptions` + `use_figma`). Les anciennes descriptions `Icon/Site` (« Test ») et `Icon/Preview` (« 99990114 », qui est en réalité l'ID de `Visibility`) sont remplacées.
+
 ## 30/10/2026 : renommage WorkRange → Service + pipeline de script Omnis
 
 - **Décision 1 — renommage** : l'icône `WorkRange` (Figma `1969:1124`, « Période de travail / Service ») est renommée **`Service`**. Les noms `WorkRange` et `ViewTimeline` sont abandonnés au profit de `Service` (décision d'Axel). L'ID Omnis `180011` est réaffecté de `WorkRange` à `Service` (classeur + `data/omnis-icons.csv` + `omnis.ts`).

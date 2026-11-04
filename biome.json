@@ -18,7 +18,8 @@
       "!node_modules",
       "!svg",
       "!src/icons",
-      "!src/omnis.ts"
+      "!src/omnis.ts",
+      "!src/tags.ts"
     ]
   },
   "overrides": [

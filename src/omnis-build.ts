@@ -27,7 +27,7 @@ export const KNOWN_UNMAPPED_IDS: ReadonlySet<number> = new Set([
   130020, // VisibilityAll : « Lu par tous » (icône masquée dans Figma, non validée)
   150005, // Done : « Fait »
   160019, // BrowserUpdatedNeutral : « Exécuter un script »
-  180010, // ExpiredSignature : « Signature expirée »
+  170004, // AlternateEmail : « Identifiants web » (supprimée de Figma, seule une copie masquée reste)
 ]);
 
 /** Suffixes d'état Omnis portés par `color` / `variant` dans le paquet. */

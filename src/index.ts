@@ -20,7 +20,6 @@ export { Agent } from "./icons/Agent";
 export { Alarm } from "./icons/Alarm";
 export { AlarmHandled } from "./icons/AlarmHandled";
 export { AlarmPostponed } from "./icons/AlarmPostponed";
-export { AlternateEmail } from "./icons/AlternateEmail";
 export { Api } from "./icons/Api";
 export { Archive } from "./icons/Archive";
 export { ArrowBack } from "./icons/ArrowBack";
@@ -331,6 +330,7 @@ export { Receivables } from "./icons/Receivables";
 export { ReceivablesRemindersStatus } from "./icons/ReceivablesRemindersStatus";
 export { RecommendResource } from "./icons/RecommendResource";
 export { Redo } from "./icons/Redo";
+export { Reference } from "./icons/Reference";
 export { Remove } from "./icons/Remove";
 export { RemoveItem } from "./icons/RemoveItem";
 export { RemovePhoto } from "./icons/RemovePhoto";
@@ -374,6 +374,7 @@ export { Shelves } from "./icons/Shelves";
 export { Shield } from "./icons/Shield";
 export { ShoppingCart } from "./icons/ShoppingCart";
 export { ShowArchives } from "./icons/ShowArchives";
+export { SignatureExpired } from "./icons/SignatureExpired";
 export { SimulationAdd } from "./icons/SimulationAdd";
 export { Simulations } from "./icons/Simulations";
 export { Site } from "./icons/Site";
@@ -396,6 +397,7 @@ export { Straighten } from "./icons/Straighten";
 export { SubContractor } from "./icons/SubContractor";
 export { SubcontractorFilter } from "./icons/SubcontractorFilter";
 export { SubcontractorOrder } from "./icons/SubcontractorOrder";
+export { Sunny } from "./icons/Sunny";
 export { SupportAgent } from "./icons/SupportAgent";
 export { SwapVert } from "./icons/SwapVert";
 export { SwitchAccount } from "./icons/SwitchAccount";
@@ -431,7 +433,6 @@ export { VisibilityLock } from "./icons/VisibilityLock";
 export { VisibilityOff } from "./icons/VisibilityOff";
 export { Warning } from "./icons/Warning";
 export { WarningDot } from "./icons/WarningDot";
-export { WbSunny } from "./icons/WbSunny";
 export { Week } from "./icons/Week";
 export { West } from "./icons/West";
 export { WhereToVote } from "./icons/WhereToVote";
@@ -448,6 +449,9 @@ export { getIconByOmnisId, omnisIcons, omnisUnmappedIds } from "./omnis";
 
 // Registry
 export { iconRegistry } from "./registry";
+export { getIconOmnisIds, getIconTags, searchIcons } from "./search";
+// Recherche
+export { iconTags } from "./tags";
 // Types
 export type {
   IconColor,

@@ -34,6 +34,8 @@ comete-icons/
 | `pnpm optimize` | Optimise les SVGs avec SVGO (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
 | `pnpm generate` | Génère les composants React depuis les SVGs (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
 | `pnpm sync-colors` | Génère `src/styles/icons.css` + l'union `IconColor` depuis comete-design-tokens (seul propriétaire de ces deux sorties) |
+| `pnpm sync-tags` | Génère `src/tags.ts` (tags de recherche) depuis `data/icon-tags.csv` et renormalise ce CSV. Échoue si le CSV ne couvre pas exactement les icônes du paquet |
+| `pnpm figma:descriptions` | Produit en JSON la description Figma de chaque icône (ID Omnis + tags), à appliquer via le MCP Figma (`use_figma`) |
 | `pnpm sync-omnis [export.csv]` | Génère `src/omnis.ts` (ID Omnis → icône) depuis `data/omnis-icons.csv` ou un export CSV du classeur (qui remplace alors l'instantané). Échoue si un nom est absent du paquet |
 | `pnpm omnis:script --only Nom --omnis-id ID` | Génère le script d'import Omnis `ajout_icon_Nom_ID.txt` (PNG 16 px outlined + 32 px duotone encodés pour `#ICONS`). Voir « Génération du script d'import Omnis » |
 | `pnpm pipeline` | fetch → optimize → generate (chaîne complète) |
@@ -103,9 +105,10 @@ Fichiers SVG : `{IconName}-{16|24}.svg`
 2. Nommer la frame de l'icône `Icon/{NomEnPascalCase}` avec des instances portant les properties `variant` et `spacing`
 3. `FIGMA_TOKEN=xxx pnpm figma:sync` (⚠️ pas `pnpm fetch`, commande built-in de pnpm ; le token est lu depuis **`FIGMA_TOKEN`**, le `.env` peut la définir). Le sync remplit le cache local `svg/` (gitignoré) avec **tout** le fichier Figma, y compris des icônes volontairement non ajoutées au paquet.
 4. `pnpm optimize --only NomEnPascalCase && pnpm generate --only NomEnPascalCase` (plusieurs noms séparés par des virgules). Le filtre `--only` ne touche que l'icône visée : les autres composants, `index.ts`, `types.ts`, `registry.ts` et `icons.css` restent inchangés. Le diff attendu est exactement : `src/icons/Nom.tsx` + une ligne dans chacun de `index.ts`, `types.ts` (union `IconName`), `registry.ts` (import + map). Ne jamais lancer `optimize`/`generate` **sans** `--only` pour un ajout ciblé.
-5. `pnpm typecheck && pnpm lint && pnpm test && pnpm build`
-6. Si l'icône a un ID Omnis : `pnpm omnis:script --only NomEnPascalCase --omnis-id ID` (cf. « Génération du script d'import Omnis ») et livrer le `.txt`
-7. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
+5. Ajouter une rangée `Nom;tag | tag` dans `data/icon-tags.csv` (usages métier, cf. « Tags de recherche ») puis `pnpm sync-tags`
+6. `pnpm typecheck && pnpm lint && pnpm test && pnpm build`
+7. Si l'icône a un ID Omnis : `pnpm omnis:script --only NomEnPascalCase --omnis-id ID` (cf. « Génération du script d'import Omnis ») et livrer le `.txt`
+8. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
 
 ## Ajout d'une icône Material Symbols (hors Figma)
 
@@ -164,9 +167,10 @@ Le mapping hex → token est dans `scripts/optimize-svg.ts` (`DUOTONE_COLOR_TO_T
 1. Placer les 6 SVGs dans `svg/{outlined,filled,duotone}/{PascalName}-{24,16}.svg`
 2. `pnpm optimize --only PascalName` → `pnpm generate --only PascalName` → `pnpm build`
 3. `npx biome check --write .` (les fichiers auto-générés nécessitent un fix d'imports)
-4. `pnpm typecheck && pnpm lint && pnpm test`
-5. Si l'icône a un ID Omnis : `pnpm omnis:script --only PascalName --omnis-id ID` (cf. « Génération du script d'import Omnis ») et livrer le `.txt`
-6. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
+4. Ajouter une rangée dans `data/icon-tags.csv` puis `pnpm sync-tags`
+5. `pnpm typecheck && pnpm lint && pnpm test`
+6. Si l'icône a un ID Omnis : `pnpm omnis:script --only PascalName --omnis-id ID` (cf. « Génération du script d'import Omnis ») et livrer le `.txt`
+7. Commit, bump de version, tag `v<version>` → la CI publie (cf. Publication)
 
 ## Dictionnaire ID Omnis (`src/omnis.ts`)
 
@@ -176,6 +180,15 @@ Le mapping hex → token est dans `scripts/optimize-svg.ts` (`DUOTONE_COLOR_TO_T
 - Un nom inconnu fait échouer le script, sauf ID listé dans `KNOWN_UNMAPPED_IDS` (`src/omnis-build.ts`). Corriger le classeur ou ajouter l'icône, jamais deviner.
 - Après l'ajout d'une icône qui a un ID Omnis : renseigner l'ID dans le classeur, exporter en CSV, `pnpm sync-omnis export.csv`.
 - Sources **obsolètes**, à ne jamais utiliser : onglet « Export » du classeur, `Correspondance omnisId-svgName.csv` et dossier `Icônes/svg` (archivés).
+
+## Tags de recherche (`data/icon-tags.csv` → `src/tags.ts`)
+
+- **Source de vérité** : `data/icon-tags.csv` (`Nom;Tags`, tags séparés par `|`), modifié à la main et relu en PR. `src/tags.ts` est **généré** par `pnpm sync-tags` (exclu de Biome, test de fraîcheur).
+- **Une rangée par icône du paquet**, tags éventuellement vides : une icône ajoutée sans rangée, ou une rangée dont l'icône a été renommée, fait échouer le script et les tests.
+- **Contenu attendu** : significations et usages métier dans Comète (« Montant », « Code de pointage »), synonymes. **Jamais les endroits où l'icône apparaît** (« Fenêtre agent », « Raccourcis personnels », « Plateforme ») : ce sont les sous-titres gris de la page Figma, des exemples d'usage, pas des tags (règle d'Axel, 04/11/2026). Pas le nom technique (déjà cherché). Pas de chemin d'accès à une fonctionnalité (« Plan. > Menu vacation ») : refusé par le script (`>`, `›`, `»`, `→`). En français.
+- **Amorçage (30/10/2026, refait le 04/11/2026 sans les exemples)** : colonne « Signification » du classeur (hors lignes « Remplacé par… » et mentions « remplacer par ») + titre noir et section de chaque icône sur la page Figma 620:2966. Le sous-titre gris (exemple d'usage) est exclu. Le CSV est ensuite l'unique source : ne pas réamorcer depuis ces sources, cela écraserait les corrections.
+- `searchIcons(query)` (`src/search.ts`) cherche dans le nom, les tags et les ID Omnis, sans accents ni casse. N'importe que des données, jamais les composants.
+- **Descriptions Figma** : la description de chaque `Icon/<Nom>` visible contient `Omnis : …` et `Tags : …` (cherchable dans le panneau Assets). Après toute modification du CSV ou des ID Omnis : `pnpm figma:descriptions > descriptions.json`, puis un script `use_figma` qui affecte `description` aux COMPONENT_SET visibles de la page « ❖ Icons » (l'API REST ne sait pas écrire les descriptions). Ne jamais toucher aux composants masqués. Publier ensuite la bibliothèque.
 
 ## Génération du script d'import Omnis (`pnpm omnis:script`)
 

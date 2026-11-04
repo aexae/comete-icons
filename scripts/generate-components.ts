@@ -405,6 +405,13 @@ function generateIndex(iconNames: string[]): string {
   );
   lines.push('export type { OmnisIcon, OmnisIconId } from "./omnis";');
   lines.push("");
+  // REASON: tags.ts est produit par sync-tags, search.ts est écrit à la main.
+  lines.push("// Recherche");
+  lines.push('export { iconTags } from "./tags";');
+  lines.push(
+    'export { getIconOmnisIds, getIconTags, searchIcons } from "./search";',
+  );
+  lines.push("");
 
   return lines.join("\n");
 }

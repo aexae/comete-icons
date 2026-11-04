@@ -59,6 +59,21 @@ const Component = icon ? iconRegistry[icon.name] : undefined;
 
 `src/omnis.ts` est généré, ne pas l'éditer. Source : onglet « Liste des icônes » du classeur SharePoint « Signification et usage des icônes.xlsx ». Pour le mettre à jour, exporter l'onglet en CSV puis lancer `pnpm sync-omnis chemin/vers/export.csv` : l'instantané `data/omnis-icons.csv` et `src/omnis.ts` sont régénérés. Le script échoue si un nom du classeur n'existe pas dans le paquet. Un test vérifie que `src/omnis.ts` correspond à l'instantané.
 
+### Recherche par usage
+
+Le nom d'une icône vient souvent de Material Symbols et ne dit rien de son usage dans Comète. `iconTags` associe à chaque icône ses usages métier (« Montant », « Code de pointage »…). `searchIcons` cherche dans le nom, les tags et les ID Omnis, sans tenir compte des accents ni de la casse, et classe les correspondances sur le nom en premier.
+
+```tsx
+import { getIconOmnisIds, getIconTags, searchIcons } from "@aexae/comete-icons";
+
+searchIcons("securite sociale"); // ["MedicalInformation"]
+searchIcons("99990802");         // ["Payments"]
+getIconTags("Payments");         // ["Montant", "Administratives"]
+getIconOmnisIds("DateRange");    // [7009, 180008]
+```
+
+`searchIcons` n'importe aucun composant : l'utiliser n'alourdit pas le bundle des icônes. `src/tags.ts` est généré depuis `data/icon-tags.csv` (`pnpm sync-tags`), à modifier en PR pour ajouter ou corriger un tag.
+
 ## Props
 
 | Prop | Type | Défaut | Description |
@@ -111,6 +126,8 @@ comete-icons/
 | `pnpm optimize` | Optimise les SVGs avec SVGO (couleurs → `currentColor`) |
 | `pnpm generate` | Génère les composants React, le registry et les types |
 | `pnpm sync-colors` | Régénère `icons.css` et `IconColor` depuis les tokens |
+| `pnpm sync-tags` | Régénère `src/tags.ts` (tags de recherche) depuis `data/icon-tags.csv` |
+| `pnpm figma:descriptions` | Produit la description Figma (ID Omnis + tags) de chaque icône, en JSON |
 | `pnpm sync-omnis [export.csv]` | Régénère `src/omnis.ts` (dictionnaire ID Omnis) depuis un export CSV du classeur |
 | `pnpm pipeline` | `figma:sync` → `optimize` → `generate` → `build` |
 | `pnpm build` | Bundle ESM tree-shakeable (tsup) |

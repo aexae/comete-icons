@@ -122,7 +122,7 @@ export const omnisIcons = {
   99990803: { name: "Notifications" },
   99990804: { name: "NotificationsAdd" },
   99990805: { name: "NightLight" },
-  99990806: { name: "WbSunny" },
+  99990806: { name: "Sunny" },
   99990807: { name: "ShoppingCart" },
   99990808: { name: "SaveSettings" },
   99990809: { name: "KeyboardDoubleArrowLeft" },
@@ -337,7 +337,6 @@ export const omnisIcons = {
   170001: { name: "Call" },
   170002: { name: "LocationOn" },
   170003: { name: "FrameInspect" },
-  170004: { name: "AlternateEmail" },
   170005: { name: "Notes" },
   170006: { name: "CometeAcademie" },
   170007: { name: "Reviews" },
@@ -363,6 +362,7 @@ export const omnisIcons = {
   180007: { name: "CalendarActivity" },
   180008: { name: "DateRange" },
   180009: { name: "ClockingBreak" },
+  180010: { name: "SignatureExpired" },
   180011: { name: "Service" },
   9001: { name: "CheckSmall" },
   9010: { name: "CheckSmall" },
@@ -410,7 +410,7 @@ export const omnisUnmappedIds: readonly number[] = [
   130020, // VisibilityAll
   150005, // Done
   160019, // BrowserUpdatedNeutral
-  180010, // ExpiredSignature
+  170004, // AlternateEmail
 ];
 
 /**
