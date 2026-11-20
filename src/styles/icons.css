@@ -20,10 +20,16 @@
   color: var(--icon-bold);
 }
 .comete-icon--brand {
-  color: var(--icon-brand);
+  color: var(--icon-brand-default);
+}
+.comete-icon--brandBoldest {
+  color: var(--icon-brand-boldest);
 }
 .comete-icon--comete {
-  color: var(--icon-comete);
+  color: var(--icon-comete-default);
+}
+.comete-icon--cometeBoldest {
+  color: var(--icon-comete-boldest);
 }
 .comete-icon--critical {
   color: var(--icon-critical);

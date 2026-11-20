@@ -36,9 +36,17 @@ for (const m of css.matchAll(tokenRegex)) {
 // Exception: "on-warning" stays "on-warning" (established API convention)
 const KEEP_KEBAB = new Set(["on-warning"]);
 
+// REASON: tokens 0.20+ split `--icon-brand` / `--icon-comete` into
+// `-default` / `-boldest`. The `-default` level keeps the historical prop name
+// ("brand", "comete") so the public IconColor API stays stable.
+const DEFAULT_SUFFIX = "-default";
+
 function toPropName(s: string): string {
   if (KEEP_KEBAB.has(s)) return s;
-  return s.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+  const base = s.endsWith(DEFAULT_SUFFIX)
+    ? s.slice(0, -DEFAULT_SUFFIX.length)
+    : s;
+  return base.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 }
 
 // Build sorted list of { propName, tokenSuffix }

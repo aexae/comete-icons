@@ -1,5 +1,9 @@
 # TODO
 
+## Couleurs d'icône (`src/styles/icons.css`)
+
+- **Pas de garde contre un token renommé** : `icons.css` a référencé `--icon-brand` et `--icon-comete` pendant plusieurs versions des tokens sans qu'aucun test ne le détecte (corrigé en 0.12.0). Ajouter un test qui vérifie chaque `var(--icon-*)` contre le CSS des tokens (installer `@aexae/comete-design-tokens` en devDependency pour ne plus dépendre du checkout voisin).
+
 ## Tags de recherche (`data/icon-tags.csv`)
 
 ### Ouvert

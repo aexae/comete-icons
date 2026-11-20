@@ -15,7 +15,7 @@ Le package est publié sur GitHub Packages. Configurer le registry dans un `.npm
 pnpm add @aexae/comete-icons
 ```
 
-Peer dependencies : `react` (18 ou 19) et `@aexae/comete-design-tokens` (^0.11.0).
+Peer dependencies : `react` (18 ou 19) et `@aexae/comete-design-tokens` (>=0.26.0).
 
 ## Utilisation
 

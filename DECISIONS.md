@@ -1,5 +1,12 @@
 # Décisions
 
+## 20/11/2026 : couleurs `brand` et `comete` rebranchées sur les tokens (0.12.0)
+
+- **Constat** : `icons.css` lisait `--icon-brand` et `--icon-comete`, renommés en `--icon-brand-default` / `--icon-brand-boldest` et `--icon-comete-default` / `--icon-comete-boldest` dans les tokens 0.26.0. La variable n'existant plus, `color` était ignorée et les icônes `color="brand"` ou `color="comete"` prenaient la couleur du texte parent.
+- **Décision** : `sync-colors` associe le niveau `-default` au nom historique (`brand`, `comete`), l'API `IconColor` ne change donc pas. Les niveaux `-boldest` deviennent deux nouvelles couleurs, `brandBoldest` et `cometeBoldest` (ajout, d'où le bump mineur 0.12.0).
+- **Peer dependency** : `>=0.26.0`, première version des tokens qui fournit `--icon-brand-default`. `>=` plutôt que `^` car en 0.x, `^` bloque sur la mineure.
+- **Limite** : aucun test ne vérifie que chaque `var(--icon-*)` de `icons.css` existe dans les tokens (ils ne sont pas installés dans ce dépôt, seulement lus dans le checkout voisin par le script). Cf. TODO.
+
 ## 04/11/2026 : alignements Figma → paquet (0.11.0)
 
 - **`SignatureExpired`** ajoutée depuis Figma (1804:1604) : document soumis à une signature électronique qui a expiré. C'est l'icône attendue pour l'ID 180010, auparavant non mappé sous le nom `ExpiredSignature`. Classeur (C351) et instantané renommés `SignatureExpired`.
