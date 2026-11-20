@@ -15,7 +15,7 @@ Le package est publié sur GitHub Packages. Configurer le registry dans un `.npm
 pnpm add @aexae/comete-icons
 ```
 
-Peer dependencies : `react` (18 ou 19) et `@aexae/comete-design-tokens` (>=0.26.0).
+Peer dependencies : `react` (18 ou 19) et `@aexae/comete-design-tokens` (>=0.33.0).
 
 ## Utilisation
 
@@ -90,7 +90,7 @@ Toutes les autres props SVG (`onClick`, `aria-label`, `style`, …) sont transmi
 
 `IconColor` est généré depuis les tokens `--icon-*` de `@aexae/comete-design-tokens` :
 
-`default` · `bold` · `subtle` · `subtlest` · `disabled` · `inverted` · `selected` · `brand` · `information` · `success` · `warning` · `critical` · `on-warning` · `day` · `night` · `accentBlueGrey` · `accentMagenta` · `accentPurple` · `accentTeal` · `accentTurquoise`
+`default` · `bold` · `subtle` · `subtlest` · `disabled` · `inverted` · `selected` · `brand` · `information` · `success` · `warning` · `critical` · `on-light-surface` · `on-dark-surface` · `day` · `night` · `accentBlueGrey` · `accentMagenta` · `accentPurple` · `accentTeal` · `accentTurquoise`
 
 Chaque valeur applique la classe `.comete-icon--{color}` qui résout `color: var(--icon-…)`.
 

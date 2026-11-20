@@ -1,5 +1,11 @@
 # Décisions
 
+## 20/11/2026 : couleurs `on-light-surface` et `on-dark-surface` (0.13.0)
+
+- **Changement cassant** : la couleur `on-warning` devient `on-light-surface`, suite au renommage des tokens 0.33.0 (`--icon-on-warning` devient `--icon-on-light-surface`). Nouvelle couleur `on-dark-surface` (`--icon-on-dark-surface`, blanc fixe sur les surfaces sombres fixes : navy Comète, fond critical bold). Les deux restent en kebab-case, comme l'ancien `on-warning`.
+- **Peer dependency** : `>=0.33.0`.
+- **Migration** : remplacer `color="on-warning"` par `color="on-light-surface"`.
+
 ## 20/11/2026 : couleurs `brand` et `comete` rebranchées sur les tokens (0.12.0)
 
 - **Constat** : `icons.css` lisait `--icon-brand` et `--icon-comete`, renommés en `--icon-brand-default` / `--icon-brand-boldest` et `--icon-comete-default` / `--icon-comete-boldest` dans les tokens 0.26.0. La variable n'existant plus, `color` était ignorée et les icônes `color="brand"` ou `color="comete"` prenaient la couleur du texte parent.

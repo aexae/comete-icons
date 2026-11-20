@@ -52,8 +52,11 @@
 .comete-icon--night {
   color: var(--icon-night);
 }
-.comete-icon--on-warning {
-  color: var(--icon-on-warning);
+.comete-icon--on-dark-surface {
+  color: var(--icon-on-dark-surface);
+}
+.comete-icon--on-light-surface {
+  color: var(--icon-on-light-surface);
 }
 .comete-icon--selected {
   color: var(--icon-selected);

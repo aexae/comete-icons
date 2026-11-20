@@ -33,8 +33,9 @@ for (const m of css.matchAll(tokenRegex)) {
 
 // Convert kebab-case token suffix to camelCase prop name
 // e.g. "accent-purple" → "accentPurple"
-// Exception: "on-warning" stays "on-warning" (established API convention)
-const KEEP_KEBAB = new Set(["on-warning"]);
+// Exception: "on-light-surface" / "on-dark-surface" stay kebab-case (established
+// API convention, inherited from the former "on-warning")
+const KEEP_KEBAB = new Set(["on-light-surface", "on-dark-surface"]);
 
 // REASON: tokens 0.20+ split `--icon-brand` / `--icon-comete` into
 // `-default` / `-boldest`. The `-default` level keeps the historical prop name
