@@ -4,31 +4,35 @@ export type IconSpacing = "default" | "none";
 
 export type IconVariant = "outlined" | "filled" | "duotone";
 
-export type IconColor =
-  | "accentBlueGrey"
-  | "accentMagenta"
-  | "accentPurple"
-  | "accentTeal"
-  | "accentTurquoise"
-  | "bold"
-  | "brand"
-  | "brandBoldest"
-  | "comete"
-  | "cometeBoldest"
-  | "critical"
-  | "day"
-  | "default"
-  | "disabled"
-  | "information"
-  | "inverted"
-  | "night"
-  | "on-dark-surface"
-  | "on-light-surface"
-  | "selected"
-  | "subtle"
-  | "subtlest"
-  | "success"
-  | "warning";
+/** Couleurs d'icône disponibles, triées, dérivées des tokens `--icon-*` de comete-design-tokens. */
+export const ICON_COLORS = [
+  "accentBlueGrey",
+  "accentMagenta",
+  "accentPurple",
+  "accentTeal",
+  "accentTurquoise",
+  "bold",
+  "brand",
+  "brandBoldest",
+  "comete",
+  "cometeBoldest",
+  "critical",
+  "day",
+  "default",
+  "disabled",
+  "information",
+  "inverted",
+  "night",
+  "on-dark-surface",
+  "on-light-surface",
+  "selected",
+  "subtle",
+  "subtlest",
+  "success",
+  "warning",
+] as const;
+
+export type IconColor = (typeof ICON_COLORS)[number];
 
 /** Union of every available icon name (auto-generated from SVG sources). */
 export type IconName =

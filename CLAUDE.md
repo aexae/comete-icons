@@ -18,7 +18,7 @@ comete-icons/
 ├── src/
 │   ├── icons/*.tsx             # Composants générés (1 par icône)
 │   ├── styles/icons.css        # Classes CSS → design tokens
-│   ├── types.ts                # IconProps, IconColor, IconSpacing, IconVariant
+│   ├── types.ts                # IconProps, ICON_COLORS, IconColor, IconSpacing, IconVariant
 │   ├── utils.ts                # getIconClass()
 │   └── index.ts                # Barrel export
 └── dist/                       # Build ESM (tsup)
@@ -33,7 +33,7 @@ comete-icons/
 | `pnpm figma:sync -- --debug` | Mode debug : affiche l'arbre Figma pour diagnostic |
 | `pnpm optimize` | Optimise les SVGs avec SVGO (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
 | `pnpm generate` | Génère les composants React depuis les SVGs (`--only Nom[,Nom]` pour cibler) et **échoue** s'il reste une couleur en dur |
-| `pnpm sync-colors` | Génère `src/styles/icons.css` + l'union `IconColor` depuis comete-design-tokens (seul propriétaire de ces deux sorties) |
+| `pnpm sync-colors` | Génère `src/styles/icons.css` + la liste `ICON_COLORS` (dont `IconColor` est dérivé) depuis comete-design-tokens (seul propriétaire de ces deux sorties) |
 | `pnpm sync-tags` | Génère `src/tags.ts` (tags de recherche) depuis `data/icon-tags.csv` et renormalise ce CSV. Échoue si le CSV ne couvre pas exactement les icônes du paquet |
 | `pnpm figma:descriptions` | Produit en JSON la description Figma de chaque icône (ID Omnis + tags), à appliquer via le MCP Figma (`use_figma`) |
 | `pnpm sync-omnis [export.csv]` | Génère `src/omnis.ts` (ID Omnis → icône) depuis `data/omnis-icons.csv` ou un export CSV du classeur (qui remplace alors l'instantané). Échoue si un nom est absent du paquet |
@@ -66,11 +66,11 @@ Pour résoudre un échec : chercher la valeur hex dans `comete-design-tokens/bui
   - Tracés **secondaires** : couleur d'accent mappée vers un token CSS. Le mapping de référence est `DUOTONE_COLOR_TO_TOKEN` dans `scripts/optimize-svg.ts` (ex. `#E12121` → `var(--icon-critical)`, `#009B60` → `var(--icon-success)`, `#8270DB` → `var(--icon-accent-purple)`). Les dégradés des icônes produit Comète utilisent `--logo-comete-gradient-light/dark` et `--logo-comete-neutral`.
 - La prop `color` mappe vers les CSS custom properties de `@aexae/comete-design-tokens` : `--icon-default`, `--icon-success`, etc.
 
-### `src/styles/icons.css` et l'union `IconColor` appartiennent à `sync-icon-colors.ts`
+### `src/styles/icons.css` et la liste `ICON_COLORS` appartiennent à `sync-icon-colors.ts`
 
-Le fichier `src/styles/icons.css` (mapping `color` → token, ex. `.comete-icon--accentBlueGrey`) et l'union `IconColor` de `src/types.ts` sont la sortie de **`pnpm sync-colors`**, qui les dérive des tokens `--icon-*` de comete-design-tokens.
+Le fichier `src/styles/icons.css` (mapping `color` → token, ex. `.comete-icon--accentBlueGrey`) et la liste `ICON_COLORS` de `src/types.ts` (dont `IconColor = (typeof ICON_COLORS)[number]`) sont la sortie de **`pnpm sync-colors`**, qui les dérive des tokens `--icon-*` de comete-design-tokens.
 
-`pnpm generate` **n'écrit jamais** `icons.css` et **préserve** l'union `IconColor` existante (il la relit depuis `types.ts` avant de régénérer l'union `IconName`). Ajouter/retirer une icône ne change donc jamais `icons.css`. Relancer `pnpm sync-colors` uniquement quand comete-design-tokens ajoute ou retire un token `--icon-*`.
+`pnpm generate` **n'écrit jamais** `icons.css` et **préserve** la liste `ICON_COLORS` existante (il la relit depuis `types.ts` avant de régénérer l'union `IconName`). Ajouter/retirer une icône ne change donc jamais `icons.css`. Relancer `pnpm sync-colors` uniquement quand comete-design-tokens ajoute ou retire un token `--icon-*`.
 
 ## Export incrémental
 

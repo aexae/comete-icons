@@ -90,13 +90,23 @@ Toutes les autres props SVG (`onClick`, `aria-label`, `style`, …) sont transmi
 
 `IconColor` est généré depuis les tokens `--icon-*` de `@aexae/comete-design-tokens` :
 
-`default` · `bold` · `subtle` · `subtlest` · `disabled` · `inverted` · `selected` · `brand` · `information` · `success` · `warning` · `critical` · `on-light-surface` · `on-dark-surface` · `day` · `night` · `accentBlueGrey` · `accentMagenta` · `accentPurple` · `accentTeal` · `accentTurquoise`
+`default` · `bold` · `subtle` · `subtlest` · `disabled` · `inverted` · `selected` · `brand` · `brandBoldest` · `comete` · `cometeBoldest` · `information` · `success` · `warning` · `critical` · `on-light-surface` · `on-dark-surface` · `day` · `night` · `accentBlueGrey` · `accentMagenta` · `accentPurple` · `accentTeal` · `accentTurquoise`
 
 Chaque valeur applique la classe `.comete-icon--{color}` qui résout `color: var(--icon-…)`.
+
+La liste est aussi exportée à l'exécution sous `ICON_COLORS` (tableau `as const`, trié), dont `IconColor` est dérivé. Elle sert à construire des contrôles (Storybook, sélecteurs) sans recopier les valeurs :
+
+```tsx
+import { ICON_COLORS, type IconColor } from "@aexae/comete-icons";
+
+const options: readonly IconColor[] = ICON_COLORS;
+```
 
 ### Types exportés
 
 `IconProps` · `IconName` · `IconColor` · `IconVariant` · `IconSpacing`
+
+Valeur exportée : `ICON_COLORS` (`readonly IconColor[]`).
 
 ## Architecture
 
@@ -106,13 +116,13 @@ comete-icons/
 │   ├── fetch-icons.ts          # API Figma → SVG bruts dans svg/
 │   ├── optimize-svg.ts         # SVGO : nettoyage + currentColor
 │   ├── generate-components.ts  # SVG → composants React + CSS + types
-│   └── sync-icon-colors.ts     # tokens --icon-* → icons.css + type IconColor
+│   └── sync-icon-colors.ts     # tokens --icon-* → icons.css + ICON_COLORS / IconColor
 ├── svg/{outlined,filled,duotone}/  # SVGs (gitignored, générés par fetch)
 ├── src/
 │   ├── icons/*.tsx             # Composants générés (1 par icône)
 │   ├── styles/icons.css        # Classes CSS → design tokens
 │   ├── registry.ts             # Map IconName → composant
-│   ├── types.ts                # IconProps, IconName, IconColor, …
+│   ├── types.ts                # IconProps, IconName, ICON_COLORS, IconColor, …
 │   └── index.ts                # Barrel export
 └── dist/                       # Build ESM (tsup)
 ```
@@ -125,7 +135,7 @@ comete-icons/
 | `pnpm figma:sync -- --force` | Re-télécharge tous les SVGs (ignore le manifeste) |
 | `pnpm optimize` | Optimise les SVGs avec SVGO (couleurs → `currentColor`) |
 | `pnpm generate` | Génère les composants React, le registry et les types |
-| `pnpm sync-colors` | Régénère `icons.css` et `IconColor` depuis les tokens |
+| `pnpm sync-colors` | Régénère `icons.css` et `ICON_COLORS` / `IconColor` depuis les tokens |
 | `pnpm sync-tags` | Régénère `src/tags.ts` (tags de recherche) depuis `data/icon-tags.csv` |
 | `pnpm figma:descriptions` | Produit la description Figma (ID Omnis + tags) de chaque icône, en JSON |
 | `pnpm sync-omnis [export.csv]` | Régénère `src/omnis.ts` (dictionnaire ID Omnis) depuis un export CSV du classeur |

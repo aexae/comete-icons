@@ -1,5 +1,12 @@
 # Décisions
 
+## 20/11/2026 : liste exécutable `ICON_COLORS`, `IconColor` dérivé (0.14.0)
+
+- **Décision** : le paquet exporte `ICON_COLORS`, tableau `as const` des couleurs d'icône (trié, généré par `pnpm sync-colors` depuis les tokens `--icon-*`). `IconColor` devient `(typeof ICON_COLORS)[number]` : même union qu'en 0.13.0 (24 valeurs, liste inchangée), mais désormais disponible à l'exécution.
+- **Raison** : le design system construisait ses contrôles Storybook (`argTypes.options` du composant `Icon`) à partir d'une liste recopiée à la main, qui dérivait à chaque ajout de couleur. Avec une liste exécutable, le DS dérive ses contrôles du paquet, plus de double saisie, et le type reste la seule source de vérité.
+- **Garde** : `src/colors.test.ts` vérifie que `ICON_COLORS` est triée, sans doublon, et coïncide exactement avec les classes `.comete-icon--*` de `icons.css`. `pnpm generate` relit `ICON_COLORS` dans `types.ts` (plus l'union) et la réémet à l'identique.
+- **Compatibilité** : ajout pur (bump mineur). Aucun changement pour les consommateurs de `IconColor`.
+
 ## 20/11/2026 : couleurs `on-light-surface` et `on-dark-surface` (0.13.0)
 
 - **Changement cassant** : la couleur `on-warning` devient `on-light-surface`, suite au renommage des tokens 0.33.0 (`--icon-on-warning` devient `--icon-on-light-surface`). Nouvelle couleur `on-dark-surface` (`--icon-on-dark-surface`, blanc fixe sur les surfaces sombres fixes : navy Comète, fond critical bold). Les deux restent en kebab-case, comme l'ancien `on-warning`.

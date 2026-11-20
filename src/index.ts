@@ -460,5 +460,6 @@ export type {
   IconSpacing,
   IconVariant,
 } from "./types";
+export { ICON_COLORS } from "./types";
 // Utils
 export { getIconClass } from "./utils";

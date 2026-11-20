@@ -1,10 +1,10 @@
 /**
- * sync-icon-colors — generates icons.css and IconColor type from comete-design-tokens.
+ * sync-icon-colors — generates icons.css and ICON_COLORS/IconColor from comete-design-tokens.
  *
  * Reads the compiled CSS from @aexae/comete-design-tokens, extracts all `--icon-*`
  * custom properties, and generates:
  *   - src/styles/icons.css   (CSS classes mapping color prop → token)
- *   - Patches src/types.ts   (IconColor union type)
+ *   - Patches src/types.ts   (ICON_COLORS const list + IconColor derived type)
  *
  * Run: pnpm sync-colors
  */
@@ -77,18 +77,31 @@ writeFileSync(ICONS_CSS_PATH, cssLines.join("\n"));
 console.log(`\n✔ Written ${ICONS_CSS_PATH}`);
 
 // ---------------------------------------------------------------------------
-// 3. Patch IconColor in types.ts
+// 3. Patch ICON_COLORS / IconColor in types.ts
 
 const types = readFileSync(TYPES_PATH, "utf-8");
 
-const unionMembers = colors.map((c) => `  | "${c.prop}"`).join("\n");
-const newType = `export type IconColor =\n${unionMembers};`;
+const listMembers = colors.map((c) => `  "${c.prop}",`).join("\n");
+const newBlock = `/** Couleurs d'icône disponibles, triées, dérivées des tokens \`--icon-*\` de comete-design-tokens. */
+export const ICON_COLORS = [
+${listMembers}
+] as const;
 
-const patched = types.replace(/export type IconColor =[\s\S]*?;/, newType);
+export type IconColor = (typeof ICON_COLORS)[number];`;
+
+// REASON: recognise both the current form (ICON_COLORS const + derived type,
+// since 0.14.0) and the legacy form (plain `IconColor` string union, up to
+// 0.13.0) so the script can migrate an old types.ts in one run.
+const BLOCK_REGEX =
+  /(?:\/\*\*[^\n]*\*\/\n)?export const ICON_COLORS = \[\n[\s\S]*?\] as const;\n\nexport type IconColor = \(typeof ICON_COLORS\)\[number\];|export type IconColor =\n(?:\s*\| "[^"]+")+;/;
+
+const patched = types.replace(BLOCK_REGEX, newBlock);
 
 if (patched === types) {
-  console.error("⚠ Could not find IconColor type in types.ts — skipping patch");
+  console.error(
+    "⚠ Could not find ICON_COLORS / IconColor in types.ts — skipping patch",
+  );
 } else {
   writeFileSync(TYPES_PATH, patched);
-  console.log(`✔ Patched IconColor in ${TYPES_PATH}`);
+  console.log(`✔ Patched ICON_COLORS / IconColor in ${TYPES_PATH}`);
 }

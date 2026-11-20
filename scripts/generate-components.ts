@@ -3,14 +3,15 @@
  *
  * Reads optimised SVGs from svg/{variant}/ and generates:
  *   - src/icons/{IconName}.tsx   (one per icon, all variants+spacings inline)
- *   - src/types.ts               (IconName union; the IconColor union is preserved)
+ *   - src/types.ts               (IconName union; the ICON_COLORS list is preserved)
  *   - src/utils.ts
  *   - src/registry.ts
  *   - src/index.ts               (barrel export)
  *
- * NOT generated here: src/styles/icons.css and the IconColor union belong to
- * scripts/sync-icon-colors.ts (`pnpm sync-colors`), which derives them from
- * comete-design-tokens. This script never touches them.
+ * NOT generated here: src/styles/icons.css and the ICON_COLORS list (from which
+ * IconColor is derived) belong to scripts/sync-icon-colors.ts
+ * (`pnpm sync-colors`), which derives them from comete-design-tokens. This
+ * script never touches them.
  *
  * Additive: icons already present in src/icons/ are always kept, even when
  * absent from svg/. Nothing is ever removed by this script.
@@ -65,24 +66,24 @@ function parseOnly(argv: string[]): Set<string> {
 }
 
 /**
- * Reads the IconColor union from the existing src/types.ts.
+ * Reads the ICON_COLORS list from the existing src/types.ts.
  * It is owned by sync-icon-colors.ts and must survive regeneration untouched.
  */
 function readExistingIconColors(): string[] {
   if (!existsSync(TYPES_PATH)) {
     throw new Error(
-      "src/types.ts not found — run `pnpm sync-colors` first to create the IconColor union",
+      "src/types.ts not found — run `pnpm sync-colors` first to create the ICON_COLORS list",
     );
   }
   const match = readFileSync(TYPES_PATH, "utf-8").match(
-    /export type IconColor =\n([\s\S]*?);/,
+    /export const ICON_COLORS = \[\n([\s\S]*?)\] as const;/,
   );
   const colors = match
-    ? [...match[1]!.matchAll(/\|\s*"([^"]+)"/g)].map((m) => m[1]!)
+    ? [...match[1]!.matchAll(/"([^"]+)"/g)].map((m) => m[1]!)
     : [];
   if (colors.length === 0) {
     throw new Error(
-      "IconColor union not found in src/types.ts — run `pnpm sync-colors` first",
+      "ICON_COLORS list not found in src/types.ts — run `pnpm sync-colors` first",
     );
   }
   return colors;
@@ -208,8 +209,12 @@ export type IconSpacing = "default" | "none";
 
 export type IconVariant = "outlined" | "filled" | "duotone";
 
-export type IconColor =
-${iconColors.map((c) => `  | "${c}"`).join("\n")};
+/** Couleurs d'icône disponibles, triées, dérivées des tokens \`--icon-*\` de comete-design-tokens. */
+export const ICON_COLORS = [
+${iconColors.map((c) => `  "${c}",`).join("\n")}
+] as const;
+
+export type IconColor = (typeof ICON_COLORS)[number];
 
 /** Union of every available icon name (auto-generated from SVG sources). */
 export type IconName =
@@ -391,6 +396,7 @@ function generateIndex(iconNames: string[]): string {
   lines.push(
     'export type { IconProps, IconSpacing, IconVariant, IconColor, IconName } from "./types";',
   );
+  lines.push('export { ICON_COLORS } from "./types";');
   lines.push("");
   lines.push("// Utils");
   lines.push('export { getIconClass } from "./utils";');
@@ -421,7 +427,7 @@ function generateIndex(iconNames: string[]): string {
 
 function main() {
   const only = parseOnly(process.argv.slice(2));
-  // Read before anything is written: the IconColor union is owned by sync-colors.
+  // Read before anything is written: the ICON_COLORS list is owned by sync-colors.
   const iconColors = readExistingIconColors();
 
   console.log("🔨 Building icon map from SVGs…");
@@ -485,7 +491,7 @@ function main() {
   // Generate types + utils (types needs iconNames for IconName union)
   writeFileSync(TYPES_PATH, generateTypes(iconNames, iconColors), "utf-8");
   writeFileSync(join(SRC_DIR, "utils.ts"), generateUtils(), "utf-8");
-  console.log("   ✓ types.ts (IconColor preserved) + utils.ts");
+  console.log("   ✓ types.ts (ICON_COLORS preserved) + utils.ts");
 
   // Generate registry (maps icon names to components)
   writeFileSync(
